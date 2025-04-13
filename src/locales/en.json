@@ -1,0 +1,62 @@
+{
+  "index": {
+    "authPage": {
+      "headerTitle": "Login",
+      "subHeaderTitle": "Please login with your username and password.",
+      "labelUsername": "Username",
+      "labelPassword": "Password",
+      "placeholderUsername": "Enter your username",
+      "placeholderPassword": "Enter your password",
+      "labelRememberMe": "Remember me",
+      "labelForgotPassword": "Forgot Password?",
+      "footerNoteLogin": "This application can only operate properly on the latest Browser. Make sure your browser is the latest browser."
+    },
+    "label": {
+      "name": "Name",
+      "alias": "Alias",
+      "description": "Description",
+      "fullname": "Full Name",
+      "username": "Username",
+      "password": "Password",
+      "email": "Email",
+      "phone": "Phone Number",
+      "icon": "Icon",
+      "url": "URL / Href",
+      "parent": "Parent",
+      "sequenceNo": "Sequence No",
+      "isRoot": "Is Root",
+      "isActive": "Is Active",
+      "status": "Status",
+      "actions": "Actions",
+      "addData": "Add Data",
+      "add": "Add",
+      "edit": "Edit",
+      "delete": "Delete",
+      "active": "Active",
+      "inactive": "Inactive",
+      "confirmDeleteText": "Are you sure you want to delete this data?",
+      "cancel": "Cancel",
+      "canceled": "Canceled",
+      "yesDelete": "Yes, Delete",
+      "save": "Save"
+    },
+    "placeholder": {
+      "name": "Enter your Name",
+      "alias": "Enter your Alias",
+      "description": "Enter your Description",
+      "fullname": " Enter your Full Name",
+      "username": "Enter your Username",
+      "password": "Enter your Password",
+      "email": "Enter your Email",
+      "phone": "Enter your Phone Number",
+      "select": "Select",
+      "icon": "Enter your Icon",
+      "url": "Enter your URL / Href",
+      "sequenceNo": "Enter your Sequence No",
+      "search": "Search"
+    },
+    "validate": {
+      "fieldRequired": "This field is required"
+    }
+  }
+}

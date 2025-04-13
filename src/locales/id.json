@@ -1,0 +1,62 @@
+{
+  "index": {
+    "authPage": {
+      "headerTitle": "Masuk",
+      "subHeaderTitle": "Silakan masuk dengan username dan kata sandi Anda.",
+      "labelUsername": "Username",
+      "labelPassword": "Kata Sandi",
+      "placeholderUsername": "Masukkan username Anda",
+      "placeholderPassword": "Masukkan kata sandi Anda",
+      "labelRememberMe": "Ingatkan saya",
+      "labelForgotPassword": "Lupa kata sandi?",
+      "footerNoteLogin": "Aplikasi ini hanya bisa beroperasi dengan baik pada Browser terkini. Pastikan browser Anda adalah browser terkini."
+    },
+    "label": {
+      "name": "Nama",
+      "alias": "Alias",
+      "description": "Deskripsi",
+      "fullname": "Nama Lengkap",
+      "username": "Username",
+      "password": "Kata Sandi",
+      "email": "Email",
+      "phone": "Nomor Telepon",
+      "isRoot": "Apakah Root",
+      "icon": "Icon",
+      "url": "URL / Href",
+      "parent": "Parent",
+      "sequenceNo": "No. Urut",
+      "isActive": "Apakah Aktif",
+      "status": "Status",
+      "actions": "Aksi",
+      "addData": "Tambah Data",
+      "add": "Tambah",
+      "edit": "Edit",
+      "delete": "Hapus",
+      "active": "Aktif",
+      "inactive": "Tidak Aktif",
+      "confirmDeleteText": "Apakah Anda yakin ingin menghapus data ini?",
+      "cancel": "Batal",
+      "canceled": "Batalkan",
+      "yesDelete": "Iya, Hapus",
+      "save": "Simpan"
+    },
+    "placeholder": {
+      "name": "Masukkan Nama",
+      "alias": "Masukkan Alias",
+      "description": "Masukkan Deskripsi",
+      "fullname": " Masukkan Nama Lengkap",
+      "username": "Masukkan Username",
+      "password": "Masukkan Kata Sandi",
+      "email": "Masukkan Alamat Email",
+      "phone": "Masukkan Nomor Telepon",
+      "select": "Pilih",
+      "icon": "Masukkan Icon",
+      "url": "Masukkan URL / Href",
+      "sequenceNo": "Masukkan No. Urut",
+      "search": "Cari"
+    },
+    "validate": {
+      "fieldRequired": "Kolom ini harus diisi."
+    }
+  }
+}

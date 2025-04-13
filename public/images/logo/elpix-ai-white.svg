@@ -1,0 +1,9 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 208 208" width="208" height="208">
+	<title>elpix-ai-black</title>
+	<defs>
+		<image  width="141" height="141" id="img1" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAI0AAACNAQMAAACwkGvmAAAAAXNSR0IB2cksfwAAAAZQTFRFAAAA////pdmf3QAAAAJ0Uk5TAP9bkSK1AAABeklEQVR4nOXWwW6CQBAG4B010aYHNT30KH0S7YM1wJNV3kTeoNwgQeiwDPSf3ZXYxqRNXQ/q57LBmVl2yCxLg4P4tT8qyiMyrRJTrWhea2pn5CzFi9H6w6GUdieHMp9ycu7hAsWJQ8W3qNgILMuC2nZm5vVI1FRBOi/+A3Fe+KOiLiSkiBq+LDsg2RR3v3yRTTEXBJDN53mBZJPHNSJETbHpc0A4qy+zNIVZPm0bS9nrJD3VIeqKO39B4vfdCem5rFYcH00cH66RLVIedbd8HW3aP0Lx271Qtb5yVp9aRbYAkB6lTCIkfjjEiSZbckgPUpiHSVpJkSfTJBvGAMm2QpLNhyRbFEk2MpJsdyT73CejiNfn1RXJuCuS7xgvIYyqEMb+MmHSbkfj2T1NwyEJNBzLQHb0h4ciXvLXKJ79cNaNqDvAArR/VzSvmY5pH+Whlan8piZARYi8nilAeYi8lizzG7fUa+/4nB5rSwb/Tbcv5M4g1D3q9TmInyWlPpNNynw5AAAAAElFTkSuQmCC"/>
+	</defs>
+	<style>
+	</style>
+	<use  href="#img1" x="33" y="33"/>
+</svg>
