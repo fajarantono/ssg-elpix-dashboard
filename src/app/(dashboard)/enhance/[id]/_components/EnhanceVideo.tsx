@@ -42,7 +42,7 @@ type Feature = {
 interface SettingValue {
   id: string;
   name: string;
-  value: string | number;
+  value: string | number | boolean;
   settingId: string;
   isDefault: boolean;
   isActive: boolean;
@@ -258,7 +258,7 @@ export const EnhanceVideo: React.FunctionComponent<{
           ml_models: mlModels,
           output_resolution: selectedSettings['67ff374690d8fc7f59e178ad'].value,
           grain: selectedSettings['67ff3b3073e8359703e193a0'].value,
-          comparison: false,
+          comparison: selectedSettings['680187ab48186ee7799a92f4'].value,
           stabilization_smoothing: 40, // ml_models id 26 on else off
           prores_profile: -1,
         };
@@ -273,6 +273,7 @@ export const EnhanceVideo: React.FunctionComponent<{
         router.replace(`/enhance/process/${response.data.id}`);
       }
     } catch (err) {
+      setIsLoadingIcon(false);
       setError(
         err instanceof Error ? err.message : 'An unknown error occurred',
       );

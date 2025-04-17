@@ -97,7 +97,7 @@ export const EnhanceProcess: React.FunctionComponent<{
                     height={600}
                     src={data.inputVideo.thumbnail}
                     alt="Video thumbnail"
-                    className="w-52 h-20 object-cover rounded me-5"
+                    className="w-52 h-36 object-cover rounded me-5"
                   />
                 ) : (
                   <AvatarText name={'thumbnail'} />
@@ -108,16 +108,16 @@ export const EnhanceProcess: React.FunctionComponent<{
                       <h3 className="font-semibold text-2xl text-gray-800">
                         {data?.inputVideo.name}
                       </h3>
-                      <div className="text-md text-gray-500 flex flex-row space-x-2 mt-1">
+                      <div className="text-md text-gray-500 flex flex-row gap-2 space-x-2 mt-1">
                         {data?.mlModels.map((model) => (
-                          <div key={model.id}>
+                          <div key={model.id} className="flex flex-row gap-2">
                             <Sparkles className="w-4 h-4 mt-1" />
                             <span>{model.name}</span>
                           </div>
                         ))}
                       </div>
                       <h3 className="font-semibold text-md text-blue-700 mt-1">
-                        {getStatus(status)} ...{progress} %
+                        {getStatus(status)} ...{Math.round(progress)} %
                       </h3>
                     </div>
                     <Button

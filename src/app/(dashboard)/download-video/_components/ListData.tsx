@@ -46,7 +46,7 @@ export default function ListData() {
 
   const handleDelete = () => {
     if (videoId !== null) {
-      deleted('/api/v1/download', videoId)
+      deleted('/api/v1/enhance/video', videoId)
         .then((res) => {
           if (res) {
             toast.success(`${res.message}`, {
@@ -294,7 +294,7 @@ export default function ListData() {
       </ComponentCard>
 
       <PromptConfirm
-        title={'Delete User'}
+        title={'Delete Enhanced Video'}
         description={`Are you sure you want to delete this ${videoName}?`}
         isOpen={deleteModalOpen}
         onClose={handleClose}
