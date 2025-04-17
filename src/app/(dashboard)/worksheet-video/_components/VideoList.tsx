@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useAbility } from '@/context/AbilityContext';
-import { User } from '../_interfaces/WorksheetVideo';
+import { UploadedVideo } from '../_interfaces/WorksheetVideo';
 import { ColumnProps } from '@/types/common';
-import { deleted, getAllData } from '@/services/api';
+import { deleted, getAllData, uploadFile } from '@/services/api';
 import ComponentCard from '@/components/common/ComponentCard';
 import Button from '@/components/ui/button/Button';
 import TableSkeleton from '@/components/tables/TableSkeleton';
@@ -12,14 +12,16 @@ import ErrorPage from '@/components/pages/ErrorPage';
 import SearchInput from '@/components/tables/SearchInput';
 import BasicTable from '@/components/tables/BasicTable';
 import Pagination from '@/components/tables/Pagination';
-import Badge from '@/components/ui/badge/Badge';
 import PromptConfirm from '@/components/common/PromptConfirm';
-import { PencilIcon, PlusIcon, Trash2Icon } from 'lucide-react';
+import { FolderInputIcon, Trash2Icon } from 'lucide-react';
 import AvatarText from '@/components/ui/avatar/AvatarText';
 import { toast } from 'react-toastify';
 import Image from 'next/image';
-import AddForm from './AddForm';
-import EditForm from './EditForm';
+import moment from 'moment-timezone';
+import UploadModal from './UploadModal';
+import Input from '@/components/form/input/InputField';
+import { useRouter } from 'next/navigation';
+import { duration, getVideoQuality, size } from '@/lib/utils';
 
 export default function VideoList() {
   const [page, setPage] = useState(1);
@@ -27,27 +29,25 @@ export default function VideoList() {
   const [totalPage, setTotalPage] = useState(0);
   const [total, setTotal] = useState(0);
 
-  const [data, setData] = useState<User[]>([]);
-  const [editData, setEditData] = useState<User | null>(null);
+  const [data, setData] = useState<UploadedVideo[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [addModalOpen, setAddModalOpen] = useState(false);
-  const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
-  const [userId, setUserId] = useState<string>('');
-  const [userName, setUserName] = useState<string | null>(null);
+  const [videoId, setVideoId] = useState<string>('');
+  const [videoName, setVideoName] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>('');
 
-  const ability = useAbility();
+  const [file, setFile] = useState<File | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleAdd = () => {
-    setAddModalOpen(true);
-  };
+  const ability = useAbility();
+  const router = useRouter();
 
   const handleDelete = () => {
-    deleted('/api/v1/user', userId)
+    deleted('/api/v1/video', videoId)
       .then((res) => {
         if (res) {
           toast.success(`${res.message}`, {
@@ -69,8 +69,6 @@ export default function VideoList() {
   };
 
   const handleClose = () => {
-    setAddModalOpen(false);
-    setEditModalOpen(false);
     setDeleteModalOpen(false);
   };
 
@@ -98,75 +96,145 @@ export default function VideoList() {
     fetchData();
   }, [page, limit, fetchData, searchTerm]);
 
-  const ListColumn: ColumnProps<User>[] = [
+  const handleUpload = async (selected: File) => {
+    setFile(selected);
+    setShowModal(true);
+
+    const xhr = new XMLHttpRequest();
+    const formData = new FormData();
+    formData.append('file', selected);
+
+    try {
+      const [id, message] = await uploadFile(xhr, '/api/v1/video', formData);
+
+      toast.success(message, {
+        position: 'top-right',
+        autoClose: 5000,
+        theme: 'colored',
+      });
+      router.push(`/enhance/${id}`);
+      fetchData();
+    } catch (error) {
+      setShowModal(false);
+      toast.error(`Upload gagal: ${error}`, {
+        position: 'top-right',
+        autoClose: 5000,
+        theme: 'colored',
+      });
+    } finally {
+      setTimeout(() => {
+        setShowModal(false);
+      }, 800);
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selected = e.target.files?.[0];
+    if (selected) {
+      handleUpload(selected);
+      e.target.value = '';
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const dropped = e.dataTransfer.files?.[0];
+    if (dropped) handleUpload(dropped);
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+  };
+
+  const ListColumn: ColumnProps<UploadedVideo>[] = [
     {
-      key: 'fullname',
-      title: 'No',
+      key: 'name',
+      title: 'Name',
       render: (row) => (
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 overflow-hidden rounded-full">
-            {row.avatarFile ? (
+            {row.thumbnail ? (
               <Image
                 width={40}
                 height={40}
-                src={`${process.env.NEXT_PUBLIC_CDN_URL}/avatar/${row.avatarFile}`}
-                alt={row.fullname ?? ''}
+                className="rounded"
+                src={row.thumbnail}
+                alt={row.name ?? ''}
               />
             ) : (
-              <AvatarText name={row.fullname ?? ''} />
+              <AvatarText name={row.name ?? ''} />
             )}
           </div>
           <div>
             <span className="block font-medium text-gray-600 text-theme-sm dark:text-white/90">
-              {row.fullname}
-            </span>
-            <span className="block text-gray-500 text-theme-xs dark:text-gray-400">
-              {row.email}
+              {row.name}
             </span>
           </div>
         </div>
       ),
     },
     {
-      key: 'username',
-      title: 'Format',
+      key: 'createdAt',
+      title: 'Uploaded At',
       render: (row) => (
         <span className="font-normal text-gray-800 dark:text-gray-400">
-          {row.username}
+          {moment(row.createdAt)
+            .tz('Asia/Jakarta')
+            .format('DD MMMM YYYY HH:mm:ss')}
         </span>
-      ),
-    },
-    {
-      key: 'phone',
-      title: 'Format',
-      render: (row) => (
-        <span className="font-normal text-gray-600 dark:text-gray-400">
-          {row.phone}
-        </span>
-      ),
-    },
-    {
-      key: 'role',
-      title: 'Size',
-      render: (row) => (
-        <span className="font-normal text-gray-600 dark:text-gray-400">
-          {row.role}
-        </span>
-      ),
-    },
-    {
-      key: 'isActive',
-      title: 'Duration',
-      align: 'center',
-      inlineSize: 100,
-      render: (row) => (
-        <Badge size="sm" color={row.isActive ? 'success' : 'error'}>
-          {row.isActive ? 'Active' : 'Inactive'}
-        </Badge>
       ),
     },
     {
       key: 'id',
+      title: 'Format',
+      render: (row) => (
+        <span className="font-normal text-gray-600 dark:text-gray-400">
+          {row.name.split('.')[1]}
+        </span>
+      ),
+    },
+    {
+      key: 'framerate',
+      title: 'Framerate',
+      render: (row) => (
+        <span className="font-normal text-gray-600 dark:text-gray-400">
+          {row.framerate} FPS
+        </span>
+      ),
+    },
+    {
+      key: 'nFrames',
+      title: 'Duration',
+      render: (row) => (
+        <span className="font-normal text-gray-600 dark:text-gray-400">
+          {duration(row.nFrames / row.framerate)}
+        </span>
+      ),
+    },
+    {
+      key: 'width',
+      title: 'Quality',
+      render: (row) => (
+        <span className="font-normal text-gray-600 dark:text-gray-400">
+          {getVideoQuality({
+            width: row.width,
+            height: row.height,
+            bitrate: row.bitrate,
+          })}
+        </span>
+      ),
+    },
+    {
+      key: 'size',
+      title: 'Size',
+      render: (row) => (
+        <span className="font-normal text-gray-600 dark:text-gray-400">
+          {size(row.size)}
+        </span>
+      ),
+    },
+    {
+      key: 'enhance',
       title: 'Enhance',
       align: 'center',
       inlineSize: 200,
@@ -177,7 +245,7 @@ export default function VideoList() {
               size="sm"
               className="text-gray-500 dark:text-gray-400 dark:hover:text-white/90 text-sm"
               variant="primary"
-              onClick={() => {}}
+              onClick={() => router.push(`/enhance/${row.id}`)}
             >
               Enhance
             </Button>
@@ -192,21 +260,7 @@ export default function VideoList() {
       inlineSize: 200,
       render: (row) => (
         <div className="flex justify-center items-center w-full gap-2">
-          {ability.can('update', 'User') && (
-            <Button
-              size="xs"
-              tooltip="Edit"
-              className="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white/90 text-sm"
-              variant="none"
-              startIcon={<PencilIcon size="20" />}
-              onClick={() => {
-                setEditData(row);
-                setEditModalOpen(true);
-              }}
-            />
-          )}
-
-          {ability.can('delete', 'User') && (
+          {ability.can('delete', 'Worksheet') && (
             <Button
               size="xs"
               tooltip="Delete"
@@ -214,8 +268,8 @@ export default function VideoList() {
               variant="none"
               startIcon={<Trash2Icon size="20" />}
               onClick={() => {
-                setUserId(row.id ?? '');
-                setUserName(row.fullname ?? '');
+                setVideoId(row.id ? row.id.toString() : '');
+                setVideoName(row.name ?? '');
                 setDeleteModalOpen(true);
               }}
             />
@@ -227,6 +281,58 @@ export default function VideoList() {
 
   return (
     <>
+      {ability.can('create', 'Worksheet') && (
+        <div>
+          <ComponentCard>
+            <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
+              Upload Video
+            </h3>
+            <div
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              className="border-2 border-dashed border-[#7aa6ff] rounded-xl px-10 pt-16 pb-10 flex flex-col items-center justify-center text-center bg-white"
+            >
+              <label htmlFor="video-upload" className="cursor-pointer">
+                <div className="bg-gray-200 mb-4 p-3 rounded-2xl hover:scale-120 transition-all">
+                  <FolderInputIcon
+                    size={40}
+                    className="text-gray-400 hover:text-blue-500 hover:scale-100 transition-all"
+                    onClick={() => handleFileChange}
+                  />
+                </div>
+              </label>
+
+              <label htmlFor="video-upload" className="cursor-pointer">
+                <div className="text-gray-500 text-sm">
+                  Drag and drop or{' '}
+                  <label className="text-blue-500 cursor-pointer text-bold font-bold">
+                    Browse
+                    <Input
+                      id="video-upload"
+                      ref={inputRef}
+                      type="file"
+                      accept="video/*"
+                      className="hidden"
+                      onChange={handleFileChange}
+                    />
+                  </label>
+                </div>
+
+                <p className="text-xs text-gray-400 mt-1">
+                  Support all image format
+                </p>
+
+                <p className="text-xs text-gray-300 mt-5">
+                  Your images are safely stored and secured using military grade
+                  encryption
+                </p>
+              </label>
+            </div>
+          </ComponentCard>
+
+          <UploadModal isOpen={showModal} filename={file?.name} />
+        </div>
+      )}
       <ComponentCard>
         <div className="space-y-4">
           {!error && (
@@ -243,24 +349,12 @@ export default function VideoList() {
                   }}
                 />
               </div>
-              <div>
-                {ability.can('create', 'User') && (
-                  <Button
-                    size="sm"
-                    onClick={handleAdd}
-                    className="flex items-center"
-                    startIcon={<PlusIcon />}
-                  >
-                    Add Data
-                  </Button>
-                )}
-              </div>
             </div>
           )}
           {isLoading && <TableSkeleton columns={5} rows={10} />}
           {error && <ErrorPage />}
           {!isLoading && !error && (
-            <>
+            <div>
               <BasicTable
                 columns={ListColumn}
                 data={data}
@@ -287,27 +381,14 @@ export default function VideoList() {
                   }
                 />
               )}
-            </>
+            </div>
           )}
         </div>
       </ComponentCard>
 
-      <AddForm
-        title="Add User"
-        isOpen={addModalOpen}
-        onClose={handleClose}
-        refresh={fetchData}
-      />
-      <EditForm
-        title="Edit User"
-        initValues={editData as User}
-        isOpen={editModalOpen}
-        onClose={handleClose}
-        refresh={fetchData}
-      />
       <PromptConfirm
-        title={'Delete User'}
-        description={`Are you sure you want to delete this ${userName}?`}
+        title={'Delete Uploaded Video'}
+        description={`Are you sure you want to delete this ${videoName}?`}
         isOpen={deleteModalOpen}
         onClose={handleClose}
         onAccept={handleDelete}

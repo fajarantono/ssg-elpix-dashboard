@@ -12,10 +12,22 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: '76e364c14b64f75b79dd8f3ce637ae32.eu.r2.cloudflarestorage.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.investopedia.com',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
   /* config options here */
-  webpack(config, { webpack }) {
+  webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,
       use: ['@svgr/webpack'],

@@ -2,7 +2,6 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { useAbility } from '@/context/AbilityContext';
-import { User } from '../_interfaces/DownloadVideo';
 import { ColumnProps } from '@/types/common';
 import { deleted, getAllData } from '@/services/api';
 import ComponentCard from '@/components/common/ComponentCard';
@@ -12,12 +11,20 @@ import ErrorPage from '@/components/pages/ErrorPage';
 import SearchInput from '@/components/tables/SearchInput';
 import BasicTable from '@/components/tables/BasicTable';
 import Pagination from '@/components/tables/Pagination';
-import Badge from '@/components/ui/badge/Badge';
 import PromptConfirm from '@/components/common/PromptConfirm';
 import { HardDriveDownloadIcon, Trash2Icon } from 'lucide-react';
 import AvatarText from '@/components/ui/avatar/AvatarText';
 import { toast } from 'react-toastify';
 import Image from 'next/image';
+import { DownloadVideo } from '../_interfaces/DownloadVideo';
+import moment from 'moment-timezone';
+import { duration, getVideoQuality, size } from '@/lib/utils';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@radix-ui/react-tooltip';
 
 export default function ListData() {
   const [page, setPage] = useState(1);
@@ -25,38 +32,40 @@ export default function ListData() {
   const [totalPage, setTotalPage] = useState(0);
   const [total, setTotal] = useState(0);
 
-  const [data, setData] = useState<User[]>([]);
+  const [data, setData] = useState<DownloadVideo[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
-  const [userId, setUserId] = useState<string>('');
-  const [userName, setUserName] = useState<string | null>(null);
+  const [videoId, setVideoId] = useState<number | null>(null);
+  const [videoName, setVideoName] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>('');
 
   const ability = useAbility();
 
   const handleDelete = () => {
-    deleted('/api/v1/download', userId)
-      .then((res) => {
-        if (res) {
-          toast.success(`${res.message}`, {
+    if (videoId !== null) {
+      deleted('/api/v1/download', videoId)
+        .then((res) => {
+          if (res) {
+            toast.success(`${res.message}`, {
+              position: 'top-right',
+              autoClose: 5000,
+              theme: 'colored',
+            });
+            setDeleteModalOpen(false);
+            fetchData();
+          }
+        })
+        .catch((err) => {
+          toast.error(`${err}`, {
             position: 'top-right',
             autoClose: 5000,
             theme: 'colored',
           });
-          setDeleteModalOpen(false);
-          fetchData();
-        }
-      })
-      .catch((err) => {
-        toast.error(`${err}`, {
-          position: 'top-right',
-          autoClose: 5000,
-          theme: 'colored',
         });
-      });
+    }
   };
 
   const handleClose = () => {
@@ -68,7 +77,7 @@ export default function ListData() {
 
     try {
       const res = await getAllData(
-        `/api/v1/enhance?page=${page}&limit=${limit}&sort=DESC&search=${searchTerm}`,
+        `/api/v1/enhance/video?page=${page}&limit=${limit}&sort=DESC&search=${searchTerm}`,
       );
 
       setData(Array.isArray(res.data) ? res.data : []);
@@ -87,71 +96,97 @@ export default function ListData() {
     fetchData();
   }, [page, limit, fetchData, searchTerm]);
 
-  const ListColumn: ColumnProps<User>[] = [
+  const ListColumn: ColumnProps<DownloadVideo>[] = [
     {
-      key: 'fullname',
-      title: 'No',
+      key: 'thumbnail',
+      title: 'Thumbnail',
       render: (row) => (
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 overflow-hidden rounded-full">
-            {row.avatarFile ? (
-              <Image
-                width={40}
-                height={40}
-                src={`${process.env.NEXT_PUBLIC_CDN_URL}/avatar/${row.avatarFile}`}
-                alt={row.fullname ?? ''}
-              />
-            ) : (
-              <AvatarText name={row.fullname ?? ''} />
-            )}
-          </div>
-          <div>
-            <span className="block font-medium text-gray-600 text-theme-sm dark:text-white/90">
-              {row.fullname}
-            </span>
-            <span className="block text-gray-500 text-theme-xs dark:text-gray-400">
-              {row.email}
-            </span>
-          </div>
+        <div className="w-15 h-15 overflow-hidden rounded-md">
+          {row.thumbnail ? (
+            <Image
+              width={60}
+              height={60}
+              src={row.thumbnail}
+              alt={row.name ?? ''}
+            />
+          ) : (
+            <AvatarText name={row.name ?? ''} />
+          )}
         </div>
       ),
     },
     {
-      key: 'username',
+      key: 'previewVideos',
+      title: 'Name',
+      render: (row) => (
+        <>
+          <span className="block font-medium text-gray-600 text-theme-sm dark:text-white/90">
+            {row.name}
+          </span>
+          <span className="block text-gray-500 text-theme-xs dark:text-gray-400">
+            {row.owner ?? ''}
+          </span>
+        </>
+      ),
+    },
+    {
+      key: 'createdAt',
       title: 'Date',
       render: (row) => (
         <span className="font-normal text-gray-800 dark:text-gray-400">
-          {row.username}
+          {moment(row.createdAt)
+            .tz('Asia/Jakarta')
+            .format('DD MM yyyy, hh.mm z')}
         </span>
       ),
     },
     {
-      key: 'phone',
+      key: 'name',
       title: 'Format',
       render: (row) => (
         <span className="font-normal text-gray-600 dark:text-gray-400">
-          {row.phone}
+          {row.name.split('.')[1]}
         </span>
       ),
     },
     {
-      key: 'role',
+      key: 'framerate',
+      title: 'Framerate',
+      render: (row) => (
+        <span className="font-normal text-gray-600 dark:text-gray-400">
+          {row.framerate} FPS
+        </span>
+      ),
+    },
+    {
+      key: 'nFrames',
+      title: 'Duration',
+      render: (row) => (
+        <span className="font-normal text-gray-600 dark:text-gray-400">
+          {duration(row.nFrames / row.framerate)}
+        </span>
+      ),
+    },
+    {
+      key: 'width',
+      title: 'Quality',
+      render: (row) => (
+        <span className="font-normal text-gray-600 dark:text-gray-400">
+          {getVideoQuality({
+            width: row.width,
+            height: row.height,
+            bitrate: row.bitrate,
+          })}
+        </span>
+      ),
+    },
+    {
+      key: 'size',
       title: 'Size',
       render: (row) => (
         <span className="font-normal text-gray-600 dark:text-gray-400">
-          {row.role}
+          {size(row.size)}
         </span>
-      ),
-    },
-    {
-      key: 'isActive',
-      title: 'Duration',
-      align: 'center',
-      inlineSize: 100,
-      render: (row) => (
-        <Badge size="sm" color={row.isActive ? 'success' : 'error'}>
-          {row.isActive ? 'Active' : 'Inactive'}
-        </Badge>
       ),
     },
     {
@@ -161,18 +196,7 @@ export default function ListData() {
       inlineSize: 200,
       render: (row) => (
         <div className="flex justify-center items-center w-full gap-2">
-          {ability.can('download', 'video-download') && (
-            <Button
-              size="xs"
-              tooltip="Edit"
-              className="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white/90 text-sm"
-              variant="none"
-              startIcon={<HardDriveDownloadIcon size="20" />}
-              onClick={() => {}}
-            />
-          )}
-
-          {ability.can('delete', 'User') && (
+          {ability.can('delete', 'Video Enhance') && (
             <Button
               size="xs"
               tooltip="Delete"
@@ -180,11 +204,34 @@ export default function ListData() {
               variant="none"
               startIcon={<Trash2Icon size="20" />}
               onClick={() => {
-                setUserId(row.id ?? '');
-                setUserName(row.fullname ?? '');
+                setVideoId(Number(row.id));
+                setVideoName(row.name ?? '');
                 setDeleteModalOpen(true);
               }}
             />
+          )}
+          {ability.can('download', 'Video Enhance') && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <a
+                    href={row.file}
+                    download
+                    className="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white/90 text-sm"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <HardDriveDownloadIcon size="20" />
+                  </a>
+                </TooltipTrigger>
+                <TooltipContent side="top" className="relative">
+                  <div className="drop-shadow-lg whitespace-nowrap rounded-lg bg-[#1E2634] px-3 py-2 text-xs font-medium text-white">
+                    Download
+                  </div>
+                  <div className="absolute -bottom-1 left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 bg-[#1E2634]"></div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           )}
         </div>
       ),
@@ -248,7 +295,7 @@ export default function ListData() {
 
       <PromptConfirm
         title={'Delete User'}
-        description={`Are you sure you want to delete this ${userName}?`}
+        description={`Are you sure you want to delete this ${videoName}?`}
         isOpen={deleteModalOpen}
         onClose={handleClose}
         onAccept={handleDelete}

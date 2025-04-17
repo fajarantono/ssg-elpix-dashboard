@@ -2,7 +2,7 @@ import { getRequestConfig } from 'next-intl/server';
 import { cookies } from 'next/headers';
 
 export const AppConfig = {
-  name: 'AltaVision Asia Developers',
+  name: 'Elpix Ai Developers',
   locales: ['en', 'fr'],
   defaultLocale: 'en',
 };

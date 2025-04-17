@@ -47,7 +47,7 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <div className="flex flex-col flex-1 lg:w-1/2 w-full">
+          <div className="content-center lg:w-1/2 w-full">
             <LoginForm />
           </div>
         </div>

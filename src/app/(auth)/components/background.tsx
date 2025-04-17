@@ -15,7 +15,7 @@ export default function Background() {
         />
       </Link>
       <p className="text-center text-gray-400 dark:text-white/60">
-        {process.env.NEXT_PUBLIC_PROJECT_NAME ?? 'Altavision Dashboard'}
+        {process.env.NEXT_PUBLIC_PROJECT_NAME ?? 'Elpix Dashboard'}
       </p>
     </div>
   );

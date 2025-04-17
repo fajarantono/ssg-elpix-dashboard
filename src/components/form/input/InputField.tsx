@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import React, { FC } from 'react';
+import React, { FC, RefObject } from 'react';
 import { UseFormRegisterReturn } from 'react-hook-form';
 
 interface InputProps {
@@ -15,6 +15,7 @@ interface InputProps {
   max?: string;
   accept?: string;
   step?: number;
+  ref?: RefObject<HTMLInputElement | null>,
   disabled?: boolean;
   success?: boolean;
   error?: boolean;
@@ -32,6 +33,7 @@ const Input: FC<InputProps> = ({
   onChange,
   className = '',
   accept,
+  ref,
   min,
   max,
   step,
@@ -75,6 +77,7 @@ const Input: FC<InputProps> = ({
         value={value}
         onChange={onChange}
         min={min}
+        ref={ref}
         max={max}
         step={step}
         disabled={disabled}

@@ -83,7 +83,7 @@ export default function LoginForm() {
 
   return (
     <>
-      <div className="flex flex-col justify-center lg:flex-1 md:flex-1 w-full max-w-md mx-auto">
+      <div className="flex flex-col justify-center w-full max-w-md mx-auto">
         <div className="flex flex-row justify-center sm:pt-10 mb-5">
           <Image
             src="/images/logo/elpix-ai.svg"
@@ -227,7 +227,7 @@ export default function LoginForm() {
         </div>
       </div>
 
-      <div className="sm:py-7 sm:flex-1 mt-5 text-end">
+      <div className="sm:py-7 mt-5 text-end">
         <SwitchLanguage />
       </div>
     </>

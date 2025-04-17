@@ -82,7 +82,40 @@ export const getById = async (endpoint: string, id: string | number) => {
   }
 };
 
-type appParam = string | number | boolean;
+export type appParam = string | number | boolean | string[] | number[] | null;
+
+export const uploadFile = async (
+  xhr: XMLHttpRequest,
+  endpoint: string,
+  data: FormData,
+): Promise<[id: string, message: string]> => {
+  const url = `${apiUrl}${endpoint}`;
+  const headers = await getHeaders();
+
+  return new Promise((resolve, reject) => {
+    xhr.open('POST', url);
+    xhr.setRequestHeader('Authorization', headers.Authorization);
+
+    xhr.onload = () => {
+      try {
+        const response = JSON.parse(xhr.responseText);
+        if (xhr.status === 200 || xhr.status === 201) {
+          resolve([response.data.id, response.message]);
+        } else {
+          reject(new Error(response.message ?? response.error ?? 'Unknown error'));
+        }
+      } catch (err) {
+        reject(new Error(`Invalid JSON response: ${err}`));
+      }
+    };
+
+    xhr.onerror = () => {
+      reject(new Error('Network Error'));
+    };
+
+    xhr.send(data);
+  });
+};
 
 export const created = async (
   endpoint: string,

@@ -41,7 +41,7 @@ export default function NotFound() {
       {/* <!-- Footer --> */}
       <p className="absolute text-sm text-center text-gray-500 -translate-x-1/2 bottom-6 left-1/2 dark:text-gray-400">
         &copy; {new Date().getFullYear()} -{' '}
-        {process.env.NEXT_PUBLIC_PROJECT_NAME ?? 'Altavision Dashboard'}
+        {process.env.NEXT_PUBLIC_PROJECT_NAME ?? 'Elpix Dashboard'}
       </p>
     </div>
   );

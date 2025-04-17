@@ -22,7 +22,7 @@ import EditForm from './EditForm';
 export default function ListData() {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  const [totalPages, setTotalPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
   const [total, setTotal] = useState(0);
 
   const [data, setData] = useState<Access[]>([]);
@@ -59,10 +59,10 @@ export default function ListData() {
       })
       .catch((err) => {
         toast.error(`${err}`, {
-            position: 'top-right',
-            autoClose: 5000,
-            theme: 'colored',
-          });
+          position: 'top-right',
+          autoClose: 5000,
+          theme: 'colored',
+        });
       });
   };
 
@@ -81,8 +81,8 @@ export default function ListData() {
       );
 
       setData(Array.isArray(res.data) ? res.data : []);
-      setTotalPage(res?.pagination?.totalPages || 0);
-      setTotal(res?.pagination?.totalItems || 0);
+      setTotalPages(res?.pagination?.totalPages ?? 0);
+      setTotal(res?.pagination?.totalItems ?? 0);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : 'An unknown error occurred',
@@ -128,38 +128,36 @@ export default function ListData() {
       align: 'center',
       inlineSize: 200,
       render: (row) => (
-        <>
-          <div className="flex justify-center items-center w-full gap-2">
-            {ability.can('update', 'Access') && (
-              <Button
-                size="xs"
-                tooltip="Edit"
-                className="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white/90 text-sm"
-                variant="none"
-                startIcon={<PencilIcon size="20" />}
-                onClick={() => {
-                  setEditData(row);
-                  setEditModalOpen(true);
-                }}
-              />
-            )}
+        <div className="flex justify-center items-center w-full gap-2">
+          {ability.can('update', 'Access') && (
+            <Button
+              size="xs"
+              tooltip="Edit"
+              className="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white/90 text-sm"
+              variant="none"
+              startIcon={<PencilIcon size="20" />}
+              onClick={() => {
+                setEditData(row);
+                setEditModalOpen(true);
+              }}
+            />
+          )}
 
-            {ability.can('delete', 'Role') && (
-              <Button
-                size="xs"
-                tooltip="Delete"
-                className="text-gray-500 hover:text-error-500 dark:text-gray-400 dark:hover:text-error-500 text-sm"
-                variant="none"
-                startIcon={<Trash2Icon size="20" />}
-                onClick={() => {
-                  setAccessId(row.id ?? '');
-                  setAccessName(row.name);
-                  setDeleteModalOpen(true);
-                }}
-              />
-            )}
-          </div>
-        </>
+          {ability.can('delete', 'Role') && (
+            <Button
+              size="xs"
+              tooltip="Delete"
+              className="text-gray-500 hover:text-error-500 dark:text-gray-400 dark:hover:text-error-500 text-sm"
+              variant="none"
+              startIcon={<Trash2Icon size="20" />}
+              onClick={() => {
+                setAccessId(row.id ?? '');
+                setAccessName(row.name);
+                setDeleteModalOpen(true);
+              }}
+            />
+          )}
+        </div>
       ),
     },
   ];
@@ -200,9 +198,9 @@ export default function ListData() {
           {error && <ErrorPage />}
           {!isLoading && !error && (
             <>
-              <BasicTable 
-                columns={ListColumn} 
-                data={data} 
+              <BasicTable
+                columns={ListColumn}
+                data={data}
                 variant={{
                   striped: true,
                   sm: true,

@@ -1,5 +1,5 @@
 export interface Main {
-  id: string;
+  id: string | number;
   createdAt?: string;
   actions?: string;
 }
