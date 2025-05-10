@@ -250,7 +250,7 @@ export const EnhanceVideo: React.FunctionComponent<{
           qscale: qscale,
           container: selectedSettings['67ff3b35b5cbc84cf90b8bb6'].value,
           chroma_subsampling: chromaSubsampling,
-          preview: false,
+          preview: true,
           start_frame: starFrame,
           end_frame: endFrame,
           input_video: data.id,
@@ -406,7 +406,7 @@ export const EnhanceVideo: React.FunctionComponent<{
 
           <div className="w-full flex-1">
             <ComponentCard>
-              <Accordion type="multiple" defaultValue={['item-2']}>
+              <Accordion type="multiple" defaultValue={['item-1']}>
                 <AccordionItem value="item-1">
                   <AccordionTrigger className="text-lg font-outfit font-semibold">
                     Select AI Filter
