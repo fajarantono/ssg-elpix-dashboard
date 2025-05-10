@@ -195,7 +195,7 @@ export default function ListData() {
               variant="none"
               startIcon={<Trash2Icon size="20" />}
               onClick={() => {
-                setUserId(row.id ?? '');
+                setUserId((row.id ?? '').toString());
                 setUserName(row.fullname ?? '');
                 setDeleteModalOpen(true);
               }}

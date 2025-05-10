@@ -1,5 +1,5 @@
 'use client';
-import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 type SidebarContextType = {
   isExpanded: boolean;
@@ -62,22 +62,6 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
   const toggleSubmenu = (item: string) => {
     setOpenSubmenu((prev) => (prev === item ? null : item));
   };
-
-  const obj = useMemo(
-    () => ({
-      isExpanded: isMobile ? false : isExpanded,
-      isMobileOpen,
-      isHovered,
-      activeItem,
-      openSubmenu,
-      toggleSidebar,
-      toggleMobileSidebar,
-      setIsHovered,
-      setActiveItem,
-      toggleSubmenu,
-    }),
-    [],
-  );
 
   return (
     <SidebarContext.Provider

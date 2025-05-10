@@ -23,7 +23,7 @@ import ListManage from './ListManage';
 export default function ListData() {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  const [totalPages, setTotalPage] = useState(0);
+  const [totalPage, setTotalPage] = useState(0);
   const [total, setTotal] = useState(0);
 
   const [data, setData] = useState<Role[]>([]);
@@ -146,53 +146,51 @@ export default function ListData() {
       align: 'center',
       inlineSize: 200,
       render: (row) => (
-        <>
-          <div className="flex justify-center items-center w-full gap-2">
-            {ability.can('update', 'Role') && (
-              <Button
-                size="xs"
-                tooltip="Manage"
-                className="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white/90 text-sm"
-                variant="none"
-                startIcon={<Settings size="20" />}
-                onClick={() => {
-                  setEditData(row);
-                  setRoleName(row.name);
-                  handleManage();
-                }}
-              />
-            )}
+        <div className="flex justify-center items-center w-full gap-2">
+          {ability.can('update', 'Role') && (
+            <Button
+              size="xs"
+              tooltip="Manage"
+              className="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white/90 text-sm"
+              variant="none"
+              startIcon={<Settings size="20" />}
+              onClick={() => {
+                setEditData(row);
+                setRoleName(row.name);
+                handleManage();
+              }}
+            />
+          )}
 
-            {ability.can('update', 'Role') && (
-              <Button
-                size="xs"
-                tooltip="Edit"
-                className="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white/90 text-sm"
-                variant="none"
-                startIcon={<PencilIcon size="20" />}
-                onClick={() => {
-                  setEditData(row);
-                  setEditModalOpen(true);
-                }}
-              />
-            )}
+          {ability.can('update', 'Role') && (
+            <Button
+              size="xs"
+              tooltip="Edit"
+              className="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white/90 text-sm"
+              variant="none"
+              startIcon={<PencilIcon size="20" />}
+              onClick={() => {
+                setEditData(row);
+                setEditModalOpen(true);
+              }}
+            />
+          )}
 
-            {ability.can('delete', 'Role') && (
-              <Button
-                size="xs"
-                tooltip="Delete"
-                className="text-gray-500 hover:text-error-500 dark:text-gray-400 dark:hover:text-error-500 text-sm"
-                variant="none"
-                startIcon={<Trash2Icon size="20" />}
-                onClick={() => {
-                  setRoleId(row.id ?? '');
-                  setRoleName(row.name);
-                  setDeleteModalOpen(true);
-                }}
-              />
-            )}
-          </div>
-        </>
+          {ability.can('delete', 'Role') && (
+            <Button
+              size="xs"
+              tooltip="Delete"
+              className="text-gray-500 hover:text-error-500 dark:text-gray-400 dark:hover:text-error-500 text-sm"
+              variant="none"
+              startIcon={<Trash2Icon size="20" />}
+              onClick={() => {
+                setRoleId((row.id ?? '').toString());
+                setRoleName(row.name);
+                setDeleteModalOpen(true);
+              }}
+            />
+          )}
+        </div>
       ),
     },
   ];
@@ -245,7 +243,7 @@ export default function ListData() {
               {data.length > 0 && (
                 <Pagination
                   currentPage={page}
-                  totalPages={totalPages}
+                  totalPages={totalPage}
                   total={total}
                   pageSize={limit}
                   pageSizeOptions={[10, 20, 50, 100]}

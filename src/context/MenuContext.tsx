@@ -4,7 +4,6 @@ import React, {
   createContext,
   useContext,
   useEffect,
-  useMemo,
   useState,
 } from 'react';
 
@@ -49,8 +48,6 @@ export const MenuProvider = ({ children }: { children: React.ReactNode }) => {
   const refreshMenu = () => {
     fetchMenu();
   };
-
-  const obj = useMemo(() => ({ menu, isLoading, refreshMenu }), []);
 
   return <MenuContext.Provider value={{ menu, isLoading, refreshMenu }}>{children}</MenuContext.Provider>;
 };
