@@ -33,7 +33,7 @@ const AppSidebar: React.FC = () => {
   );
   const subMenuRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
-  const isActive = useCallback((path: string) => path === pathname, [pathname]);
+  const isActive = useCallback((path: string) => path === pathname || path.startsWith(pathname), [pathname]);
 
   useEffect(() => {
     let submenuMatched = false;

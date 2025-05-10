@@ -25,6 +25,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@radix-ui/react-tooltip';
+import Link from 'next/link';
 
 export default function ListData() {
   const [page, setPage] = useState(1);
@@ -119,14 +120,16 @@ export default function ListData() {
       key: 'previewVideos',
       title: 'Name',
       render: (row) => (
-        <>
+        <Link
+          href={`/download-video/preview/${row.id}`}
+        >
           <span className="block font-medium text-gray-600 text-theme-sm dark:text-white/90">
             {row.name}
           </span>
           <span className="block text-gray-500 text-theme-xs dark:text-gray-400">
             {row.owner ?? ''}
           </span>
-        </>
+        </Link>
       ),
     },
     {

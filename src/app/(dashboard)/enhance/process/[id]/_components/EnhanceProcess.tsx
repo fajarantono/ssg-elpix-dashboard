@@ -36,29 +36,38 @@ export const EnhanceProcess: React.FunctionComponent<{
     return 'Proses';
   };
 
-  const pollJobStatus = async (id: number) => {
-    while (true) {
-      const res = await getById(`/api/v1/enhance`, id);
-      const data: EnhanceJob | null = res.data ?? null;
+  const setStatusText = (status: number) => {
+    if (status === 0) setStatus('queue');
+    if (status === 1) setStatus('process');
+    if (status === -1 || status === -2) setStatus('failed');
+  }
 
-      setData(data);
-
-      if (data) {
-        setIsLoading(false);
-        setProgress(data.processingProgress * 100);
-        if (data.status === 0) setStatus('queue');
-        if (data.status === 1) setStatus('process');
-        if (data.status === -1 || data.status === -2) setStatus('failed');
-        if (data.status === 2) {
-          setStatus('finish');
-          return data;
+  const pollJobStatus = useCallback(async (id: number) => {
+    try {
+      while (true) {
+        const res = await getById(`/api/v1/enhance`, id);
+        const data: EnhanceJob | null = res.data ?? null;
+  
+        setData(data);
+  
+        if (data) {
+          setIsLoading(false);
+          setProgress(data.processingProgress * 100);
+          setStatusText(data.status);
+          if (data.status === 2) {
+            setStatus('finish');
+            return data;
+          }
         }
+        await new Promise((resolve) =>
+          setTimeout(resolve, STATUS_CHECK_INTERVAL),
+        );
       }
-      await new Promise((resolve) =>
-        setTimeout(resolve, STATUS_CHECK_INTERVAL),
-      );
+    } catch (error) {
+      console.error('Error fetching job status:', error);
+      return pollJobStatus(id);
     }
-  };
+  }, [STATUS_CHECK_INTERVAL]);
 
   const getEnhanceProcess = useCallback(async () => {
     setIsLoading(true);
@@ -76,7 +85,7 @@ export const EnhanceProcess: React.FunctionComponent<{
     } finally {
       setIsLoading(false);
     }
-  }, [id, router]);
+  }, [id, pollJobStatus, router]);
 
   useEffect(() => {
     getEnhanceProcess();
