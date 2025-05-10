@@ -125,11 +125,9 @@ export default function ListData() {
       render: (row) => {
         if (row.icon && row.icon.trim() !== '') {
           return (
-            <>
-              <div className="flex justify-center items-center w-full gap-2">
-                <Icon name={row.icon} size={20} className="text-gray-500 dark:text-white/90" />
-              </div>
-            </>
+            <div className="flex justify-center items-center w-full gap-2">
+              <Icon name={row.icon} size={20} className="text-gray-500 dark:text-white/90" />
+            </div>
           );
         }
         return null;
@@ -179,7 +177,7 @@ export default function ListData() {
               variant="none"
               startIcon={<Trash2Icon size="20" />}
               onClick={() => {
-                setMenuId(row.id ?? '');
+                setMenuId((row.id ?? '').toString());
                 setMenuName(row.name);
                 setDeleteModalOpen(true);
               }}
@@ -227,7 +225,7 @@ export default function ListData() {
           {!isLoading && !error && (
             <TableTreeView
               columns={ListColumn}
-              data={data}
+              data={data.map((item) => ({ ...item, id: item.id.toString() }))}
               variant={{
                 striped: true,
                 sm: true,
