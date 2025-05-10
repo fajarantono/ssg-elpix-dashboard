@@ -151,7 +151,7 @@ export default function ListData() {
               variant="none"
               startIcon={<Trash2Icon size="20" />}
               onClick={() => {
-                setAccessId(row.id ?? '');
+                setAccessId((row.id ?? '').toString());
                 setAccessName(row.name);
                 setDeleteModalOpen(true);
               }}
