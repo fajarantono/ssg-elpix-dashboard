@@ -15,7 +15,7 @@ export default function EnhancePage() {
       <PageBreadcrumb pageTitle="Enhance Process Video" />
       <div className="space-y-6">
         {ability.can('read', 'Worksheet') && (
-          <EnhanceProcess id={Number(param.id)} />
+          <EnhanceProcess id={Number(param!.id)} />
         )}
       </div>
     </>
