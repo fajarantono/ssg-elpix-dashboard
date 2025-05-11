@@ -1,0 +1,138 @@
+.video-compare-container {
+  position: relative;
+}
+
+.video-wrapper {
+  position: relative;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.video {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.after {
+  clip-path: inset(0 0 0 50%);
+}
+
+.video.after {
+  clip-path: inset(0 50% 0 0);
+  z-index: 2;
+}
+
+.custom-controls {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 95%;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 6px 12px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 10;
+}
+
+.play-pause-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: white;
+  cursor: pointer;
+}
+
+.progress-bar {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  background: linear-gradient(to right, #3b82f6 0%, #3b82f6 var(--progress), #444 var(--progress), #444 100%);
+  border-radius: 3px;
+  outline: none;
+  transition: background 0.3s;
+}
+
+.progress-bar::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-top: -3px; /* To align with track */
+  border: 2px solid #3b82f6;
+}
+
+.progress-bar::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid #3b82f6;
+}
+
+
+.duration {
+  color: white;
+  font-size: 13px;
+}
+
+.handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background-color: white;
+  z-index: 3;
+  cursor: ew-resize;
+}
+
+.video-wrapper.landscape {
+  width: 100%;
+  max-width: 960px;
+  aspect-ratio: 16 / 9;
+  margin: auto;
+  position: relative;
+  background: black;
+  overflow: hidden;
+}
+
+.video-wrapper.portrait {
+  height: 100vh;
+  width: auto;
+  max-width: 480px;
+  margin: auto;
+  position: relative;
+  background: black;
+  overflow: hidden;
+}
+
+.label {
+  position: absolute;
+  padding: 4px 10px;
+  border: 1px solid #666;
+  border-radius: 6px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+  z-index: 10;
+}
+
+.top-left {
+  top: 10px;
+  left: 10px;
+}
+
+.top-right {
+  top: 10px;
+  right: 10px;
+}

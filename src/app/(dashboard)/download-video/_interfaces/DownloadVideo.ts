@@ -5,7 +5,7 @@ export interface DownloadVideo extends Main {
   previewVideos: {
     beforeVideo: string;
     afterVideo: string;
-  };
+  } | null;
   name: string;
   deleted: string | null;
   framerate: number;

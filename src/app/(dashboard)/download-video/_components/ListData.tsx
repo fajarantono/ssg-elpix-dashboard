@@ -119,18 +119,24 @@ export default function ListData() {
     {
       key: 'previewVideos',
       title: 'Name',
-      render: (row) => (
-        <Link
-          href={`/download-video/preview/${row.id}`}
-        >
+      render: (row) => {
+        const videoName = <>
           <span className="block font-medium text-gray-600 text-theme-sm dark:text-white/90">
-            {row.name}
+            {row.name.replace('TensorPix', 'ElpixAI')}
           </span>
           <span className="block text-gray-500 text-theme-xs dark:text-gray-400">
             {row.owner ?? ''}
           </span>
-        </Link>
-      ),
+        </>
+
+        return row.previewVideos !== null ? (
+          <Link
+            href={`/download-video/preview/${row.id}`}
+          >
+            {videoName}
+          </Link>
+        ) : videoName;
+      },
     },
     {
       key: 'createdAt',

@@ -54,6 +54,12 @@ const nextConfig: NextConfig = {
           { key: 'Access-Control-Allow-Credentials', value: 'true' },
         ],
       },
+      {
+        source: '/api/proxy',
+        headers: [
+          { key: 'Access-Control-Allow-Origin', value: '*' }, // hanya jika kamu ingin global
+        ],
+      },
     ];
   },
 };

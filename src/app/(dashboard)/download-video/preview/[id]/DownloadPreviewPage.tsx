@@ -4,6 +4,7 @@ import React from 'react';
 import { useAbility } from '@/context/AbilityContext';
 import PageBreadcrumb from '@/components/common/PageBreadCrumb';
 import { useParams } from 'next/navigation';
+import { PreviewVideo } from './_component/PreviewVideo';
 
 export default function DownloadPreviewPage() {
   const ability = useAbility();
@@ -11,17 +12,12 @@ export default function DownloadPreviewPage() {
 
   return (
     <>
-      <PageBreadcrumb pageTitle="Download Video" />
+      <PageBreadcrumb pageTitle="Preview Video" />
       <div
         className="space-y-6"
       >
         {ability.can('read', 'Video Enhance') && (
-          <div className="flex flex-col gap-4">
-            <h2 className="text-lg font-semibold">Download Video</h2>
-            <p className="text-gray-600 dark:text-gray-400">
-              This is the download video page where you can download videos. {param.id}
-            </p>
-          </div>
+          <PreviewVideo id={param!.id}/>
         )}
       </div>
     </>
