@@ -14,7 +14,7 @@ export default function EnhancePage() {
     <>
       <PageBreadcrumb pageTitle="Enhance Video" />
       <div className="space-y-6">
-        {ability.can('read', 'Worksheet') && <EnhanceVideo id={param.id} />}
+        {ability.can('read', 'Worksheet') && <EnhanceVideo id={param!.id} />}
       </div>
     </>
   );
