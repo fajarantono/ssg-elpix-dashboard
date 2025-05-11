@@ -31,7 +31,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const reader = videoRes.body?.getReader();
     if (!reader) return res.status(500).send('No video stream');
 
-    const encoder = new TextEncoder();
+    // const encoder = new TextEncoder();
 
     const pump = async () => {
       const { value, done } = await reader.read();

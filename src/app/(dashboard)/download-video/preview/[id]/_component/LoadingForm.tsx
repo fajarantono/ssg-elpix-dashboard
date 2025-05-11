@@ -1,4 +1,3 @@
-import { ClockIcon, FilmIcon, ScanIcon } from 'lucide-react';
 import React from 'react';
 
 const LoadingForm: React.FC = () => {
