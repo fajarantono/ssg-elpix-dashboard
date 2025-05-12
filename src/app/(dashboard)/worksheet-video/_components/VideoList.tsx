@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useAbility } from '@/context/AbilityContext';
-import { UploadedVideo } from '../_interfaces/WorksheetVideo';
+import {  UploadedVideo } from '../_interfaces/WorksheetVideo';
 import { ColumnProps } from '@/types/common';
 import { deleted, getAllData, uploadFile } from '@/services/api';
 import ComponentCard from '@/components/common/ComponentCard';
@@ -22,6 +22,7 @@ import UploadModal from './UploadModal';
 import Input from '@/components/form/input/InputField';
 import { useRouter } from 'next/navigation';
 import { duration, getVideoQuality, size } from '@/lib/utils';
+import EnhanceProcess from './EnhanceProcess';
 
 export default function VideoList() {
   const [page, setPage] = useState(1);
@@ -331,6 +332,7 @@ export default function VideoList() {
           </ComponentCard>
 
           <UploadModal isOpen={showModal} filename={file?.name} />
+          <EnhanceProcess />
         </div>
       )}
       <ComponentCard>
