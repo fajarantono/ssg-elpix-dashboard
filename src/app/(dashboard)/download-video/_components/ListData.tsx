@@ -109,6 +109,7 @@ export default function ListData() {
               height={60}
               src={row.thumbnail}
               alt={row.name ?? ''}
+              className="w-full h-full object-cover rounded-md"
             />
           ) : (
             <AvatarText name={row.name ?? ''} />

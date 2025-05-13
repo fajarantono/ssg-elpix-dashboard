@@ -314,7 +314,7 @@ export const EnhanceVideo: React.FunctionComponent<{
               {isLoading ? (
                 <LoadingForm />
               ) : (
-                <div className="max-w-2xl mx-auto p-4 bg-gray-100 rounded-xl flex gap-4">
+                <div className="max-w-2xl mx-auto p-4 bg-gray-100 rounded-xl flex gap-4  dark:bg-gray-800">
                   <div className="flex-shrink-0 w-64 h-40 bg-gray-200 rounded-lg overflow-hidden">
                     {data?.thumbnail ? (
                       <Image
@@ -330,18 +330,18 @@ export const EnhanceVideo: React.FunctionComponent<{
                   </div>
 
                   <div className="flex-grow">
-                    <div className="text-lg font-semibold text-gray-800 truncate mb-1 overflow-ellipsis">
+                    <div className="text-lg font-semibold text-gray-800 truncate mb-1 overflow-ellipsis dark:text-white">
                       {data?.name}
                     </div>
 
-                    <div className="text-blue-500 font-medium text-sm mb-3">
+                    <div className="text-blue-500 font-medium text-sm mb-3 dark:text-gray-300">
                       Upload Complete
                     </div>
 
-                    <div className="space-y-2 text-gray-600">
+                    <div className="space-y-">
                       <div className="flex items-center">
-                        <ClockIcon className="w-4 h-4 mr-2 text-gray-400" />
-                        <span>
+                        <ClockIcon className="w-4 h-4 mr-2 text-gray-600 dark:text-gray-400" />
+                        <span className="text-gray-600 dark:text-gray-400">
                           {duration(
                             (data?.nFrames ?? 0) / (data?.framerate ?? 0),
                           )}
@@ -349,13 +349,15 @@ export const EnhanceVideo: React.FunctionComponent<{
                       </div>
 
                       <div className="flex items-center">
-                        <FilmIcon className="w-4 h-4 mr-2 text-gray-400" />
-                        <span>{data?.framerate} FPS</span>
+                        <FilmIcon className="w-4 h-4 mr-2 text-gray-600 dark:text-gray-400" />
+                        <span className="text-gray-600 dark:text-gray-400">
+                          {data?.framerate} FPS
+                        </span>
                       </div>
 
                       <div className="flex items-center">
-                        <ScanIcon className="w-4 h-4 mr-2 text-gray-400" />
-                        <span>
+                        <ScanIcon className="w-4 h-4 mr-2 text-gray-600 dark:text-gray-400" />
+                        <span className="text-gray-600 dark:text-gray-400">
                           {data?.width}x{data?.height}&nbsp;
                           {getVideoQuality({
                             width: data?.width ?? 1,
@@ -388,15 +390,20 @@ export const EnhanceVideo: React.FunctionComponent<{
               <Button
                 size="sm"
                 tooltip="Enhance"
-                className="text-gray-500 w-full dark:text-gray-400 text-lg"
+                className="w-full text-lg text-gray-500 dark:text-gray-300"
                 variant="primary"
-                startIcon={<LucideTvMinimalPlay size="20" />}
+                startIcon={
+                  <LucideTvMinimalPlay
+                    size="20"
+                    className="dark:text-gray-200"
+                  />
+                }
                 onClick={handleEnhance}
                 disabled={
                   !(getSelected(selectedModels).length > 0 && isLoadingIcon)
                 }
               >
-                <h3 className="text-lg font-semibold text-white dark:text-black/90">
+                <h3 className="text-lg font-semibold text-white dark:text-white">
                   Create
                 </h3>
               </Button>
@@ -408,22 +415,22 @@ export const EnhanceVideo: React.FunctionComponent<{
             <ComponentCard>
               <Accordion type="multiple" defaultValue={['item-1']}>
                 <AccordionItem value="item-1">
-                  <AccordionTrigger className="text-lg font-outfit font-semibold">
+                  <AccordionTrigger className="text-lg font-outfit font-semibold dark:text-white">
                     Select AI Filter
                   </AccordionTrigger>
                   <AccordionContent>
-                    <div className="space-y-6 border-t-2 pt-5">
+                    <div className="space-y-6 border-t-2 pt-5 dark:border-gray-700">
                       {mlFeatures.map((feature) => (
                         <div
                           key={feature.id}
-                          className="border-t pt-4 first:border-none first:pt-0"
+                          className="border-t pt-4 first:border-none first:pt-0 dark:border-gray-700"
                         >
                           <div className="flex flex-wrap items-start gap-2 py-1">
-                            <div className="flex items-center gap-2 w-[170px] text-lg font-medium">
+                            <div className="flex items-center gap-2 w-[170px] text-lg font-medium dark:text-gray-100">
                               <Icon
                                 name={feature.icon}
                                 size={40}
-                                className="w-6 h-6 text-gray-600 me-2"
+                                className="w-6 h-6 text-gray-600 dark:text-gray-300 me-2"
                               />
                               {feature.name}
                             </div>
@@ -442,7 +449,7 @@ export const EnhanceVideo: React.FunctionComponent<{
                                     ${
                                       isSelected
                                         ? 'bg-blue-600 text-white border-blue-600'
-                                        : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-100'
+                                        : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700'
                                     }
                                   `}
                                   >
@@ -463,22 +470,22 @@ export const EnhanceVideo: React.FunctionComponent<{
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-2">
-                  <AccordionTrigger className="text-lg font-outfit font-semibold">
+                  <AccordionTrigger className="text-lg font-outfit font-semibold dark:text-white">
                     Setting
                   </AccordionTrigger>
                   <AccordionContent>
-                    <div className="space-y-6 border-t-2 pt-5">
+                    <div className="space-y-6 border-t-2 pt-5 dark:border-gray-700">
                       {mlSettings.map((setting) => (
                         <div
                           key={setting.id}
-                          className="border-t pt-4 first:border-none first:pt-0"
+                          className="border-t pt-4 first:border-none first:pt-0 dark:border-gray-700"
                         >
                           <div className="flex flex-wrap items-start gap-2 py-1">
-                            <div className="flex items-center gap-2 w-[170px] text-lg font-medium">
+                            <div className="flex items-center gap-2 w-[170px] text-lg font-medium dark:text-gray-100">
                               <Icon
                                 name={setting.icon}
                                 size={40}
-                                className="w-6 h-6 text-gray-600 me-2"
+                                className="w-6 h-6 text-gray-600 dark:text-gray-300 me-2"
                               />
                               {setting.name}
                             </div>
@@ -497,7 +504,7 @@ export const EnhanceVideo: React.FunctionComponent<{
                                     ${
                                       isSelected
                                         ? 'bg-blue-600 text-white border-blue-600'
-                                        : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-100'
+                                        : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700'
                                     }
                                   `}
                                   >

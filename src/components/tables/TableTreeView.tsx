@@ -149,7 +149,7 @@ export default function TableTreeView<T extends TreeNode<T>>({
       <div className="relative w-full overflow-auto">
         <Table className="w-full caption-bottom text-sm">
           <TableHeader className="[&_tr]:border-b">
-            <TableRow className="border-b transition-colors bg-gray-100">
+            <TableRow className="border-b transition-colors bg-gray-100 dark:bg-gray-700 dark:text-gray-300">
               {columns.map((column) => (
                 <th
                   key={column.key as string}

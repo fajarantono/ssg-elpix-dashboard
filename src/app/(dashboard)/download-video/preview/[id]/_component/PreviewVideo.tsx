@@ -201,86 +201,176 @@ export const PreviewVideo: React.FC<{ id: string }> = ({ id }) => {
       {!isLoading && !error && data && data.previewVideos && (
         // <div className="mx-auto p-4 bg-gray-100 rounded-xl flex">
         //   <div className="flex-shrink-0 w-full h-full bg-gray-200 rounded-lg overflow-hidden">
-            <div className="video-compare-container">
-              <div className={`video-wrapper ${videoAspect}`}>
-                <video
-                  ref={videoBeforeRef}
-                  className="video before"
-                  preload="auto"
-                  src={data.previewVideos?.beforeVideo}
-                  muted
-                  playsInline
-                />
-                <video
-                  ref={videoAfterRef}
-                  className="video after"
-                  preload="auto"
-                  src={data.previewVideos?.afterVideo}
-                  muted
-                  playsInline
-                />
+        <div className="relative">
+          <div className={`video-wrapper ${videoAspect}`}>
+            <video
+              ref={videoBeforeRef}
+              className="absolute w-full h-full object-cover before"
+              preload="auto"
+              src={data.previewVideos?.beforeVideo}
+              muted
+              playsInline
+            />
+            <video
+              ref={videoAfterRef}
+              className="absolute w-full h-full object-cover after"
+              preload="auto"
+              src={data.previewVideos?.afterVideo}
+              muted
+              playsInline
+            />
 
-                <div className="label top-left">Before</div>
-                <div className="label top-right">After</div>
+            <div className="absolute px-[10px] py-[4px] border border-[#666] rounded-md bg-black/50 text-white font-semibold text-sm z-10 top-[10px] left-[10px]">Before</div>
+            <div className="absolute px-[10px] py-[4px] border border-[#666] rounded-md bg-black/50 text-white font-semibold text-sm z-10 top-[10px] right-[10px]">After</div>
 
-                <div
-                  className="handle"
-                  style={{ left: '50%' }}
-                  role="slider"
-                  aria-valuenow={(currentTime / duration) * 100}
-                  onMouseDown={(e) => {
-                    const wrapper = e.currentTarget.parentElement!;
-                    const handle = e.currentTarget;
-                    const afterVideo = wrapper.querySelector(
-                      '.after',
-                    ) as HTMLElement;
+            <div
+              className="handle"
+              style={{ left: '50%' }}
+              role="slider"
+              aria-valuenow={(currentTime / duration) * 100}
+              onMouseDown={(e) => {
+                const wrapper = e.currentTarget.parentElement!;
+                const handle = e.currentTarget;
+                const afterVideo = wrapper.querySelector(
+                  '.after',
+                ) as HTMLElement;
 
-                    const onMouseMove = (ev: MouseEvent) => {
-                      const rect = wrapper.getBoundingClientRect();
-                      let x = ev.clientX - rect.left;
-                      x = Math.max(0, Math.min(x, rect.width)); // clamp
-                      const percent = (x / rect.width) * 100;
+                const onMouseMove = (ev: MouseEvent) => {
+                  const rect = wrapper.getBoundingClientRect();
+                  let x = ev.clientX - rect.left;
+                  x = Math.max(0, Math.min(x, rect.width)); // clamp
+                  const percent = (x / rect.width) * 100;
 
-                      afterVideo.style.clipPath = `inset(0 ${
-                        100 - percent
-                      }% 0 0)`;
-                      handle.style.left = `${percent}%`;
-                    };
+                  afterVideo.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
+                  handle.style.left = `${percent}%`;
+                };
 
-                    const onMouseUp = () => {
-                      document.removeEventListener('mousemove', onMouseMove);
-                      document.removeEventListener('mouseup', onMouseUp);
-                    };
+                const onMouseUp = () => {
+                  document.removeEventListener('mousemove', onMouseMove);
+                  document.removeEventListener('mouseup', onMouseUp);
+                };
 
-                    document.addEventListener('mousemove', onMouseMove);
-                    document.addEventListener('mouseup', onMouseUp);
-                  }}
-                />
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', onMouseUp);
+              }}
+            />
 
-                <div className="custom-controls">
-                  <button onClick={handlePlayPause} className="play-pause-btn">
-                    {isPlaying ? '⏸️' : '▶️'}
-                  </button>
-                  <input
-                    type="range"
-                    className="progress-bar"
-                    min={0}
-                    max={duration}
-                    step={0.1}
-                    value={currentTime}
-                    onChange={handleSeek}
-                    style={
-                      {
-                        '--progress': `${(currentTime / duration) * 100}%`,
-                      } as React.CSSProperties
-                    }
-                  />
-                  <span className="duration">{remainingTime}</span>
-                </div>
-              </div>
-            {/* </div>
-          </div> */}
+            <div className="custom-controls">
+              <button onClick={handlePlayPause} className="play-pause-btn">
+                {isPlaying ? '⏸️' : '▶️'}
+              </button>
+              <input
+                type="range"
+                className="progress-bar"
+                min={0}
+                max={duration}
+                step={0.1}
+                value={currentTime}
+                onChange={handleSeek}
+                style={
+                  {
+                    '--progress': `${(currentTime / duration) * 100}%`,
+                  } as React.CSSProperties
+                }
+              />
+              <span className="duration">{remainingTime}</span>
+            </div>
+          </div>
         </div>
+        // <div className="video-compare-container relative w-full rounded-lg overflow-hidden bg-white dark:bg-gray-900">
+        //   <div className={`video-wrapper relative w-full ${videoAspect}`}>
+        //     {/* BEFORE VIDEO */}
+        //     <video
+        //       ref={videoBeforeRef}
+        //       className="absolute top-0 left-0 w-full h-full object-cover z-0"
+        //       preload="auto"
+        //       src={data.previewVideos?.beforeVideo}
+        //       muted
+        //       playsInline
+        //     />
+
+        //     {/* AFTER VIDEO */}
+        //     <video
+        //       ref={videoAfterRef}
+        //       className="absolute top-0 left-0 w-full h-full object-cover z-10 clip-after"
+        //       preload="auto"
+        //       src={data.previewVideos?.afterVideo}
+        //       muted
+        //       playsInline
+        //     />
+
+        //     {/* Labels */}
+        //     <div className="absolute top-2 left-2 px-2 py-1 text-xs font-semibold rounded bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-100 z-20">
+        //       Before
+        //     </div>
+        //     <div className="absolute top-2 right-2 px-2 py-1 text-xs font-semibold rounded bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-100 z-20">
+        //       After
+        //     </div>
+
+        //     {/* Handle slider */}
+        //     <div
+        //       className="absolute top-0 bottom-0 w-1 bg-gray-300 dark:bg-gray-200 cursor-ew-resize z-30"
+        //       style={{ left: '50%' }}
+        //       role="slider"
+        //       aria-valuenow={(currentTime / duration) * 100}
+        //       onMouseDown={(e) => {
+        //         const wrapper = e.currentTarget.parentElement!;
+        //         const handle = e.currentTarget;
+        //         const afterVideo = wrapper.querySelector(
+        //           '.clip-after',
+        //         ) as HTMLElement;
+
+        //         const onMouseMove = (ev: MouseEvent) => {
+        //           const rect = wrapper.getBoundingClientRect();
+        //           let x = ev.clientX - rect.left;
+        //           x = Math.max(0, Math.min(x, rect.width));
+        //           const percent = (x / rect.width) * 100;
+
+        //           afterVideo.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
+        //           handle.style.left = `${percent}%`;
+        //         };
+
+        //         const onMouseUp = () => {
+        //           document.removeEventListener('mousemove', onMouseMove);
+        //           document.removeEventListener('mouseup', onMouseUp);
+        //         };
+
+        //         document.addEventListener('mousemove', onMouseMove);
+        //         document.addEventListener('mouseup', onMouseUp);
+        //       }}
+        //     />
+
+        //     {/* Controls */}
+        //     <div className="absolute bottom-0 left-0 right-0 bg-white/80 dark:bg-gray-900/80 px-4 py-2 flex items-center justify-between z-40">
+        //       <button
+        //         onClick={handlePlayPause}
+        //         className="text-lg font-medium text-gray-700 dark:text-gray-100"
+        //       >
+        //         {isPlaying ? '⏸️' : '▶️'}
+        //       </button>
+        //       <input
+        //         type="range"
+        //         min={0}
+        //         max={duration}
+        //         step={0.1}
+        //         value={currentTime}
+        //         onChange={handleSeek}
+        //         className="mx-4 flex-1 h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer accent-blue-600"
+        //         style={
+        //           {
+        //             '--progress': `${(currentTime / duration) * 100}%`,
+        //           } as React.CSSProperties
+        //         }
+        //       />
+        //       <span className="text-sm text-gray-500 dark:text-gray-300">
+        //         {remainingTime}
+        //       </span>
+        //     </div>
+        //   </div>
+        // </div>
+
+        //   </div>
+        // </div>
       )}
     </ComponentCard>
   );

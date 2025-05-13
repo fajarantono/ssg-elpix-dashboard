@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useAbility } from '@/context/AbilityContext';
-import {  UploadedVideo } from '../_interfaces/WorksheetVideo';
+import { UploadedVideo } from '../_interfaces/WorksheetVideo';
 import { ColumnProps } from '@/types/common';
 import { deleted, getAllData, uploadFile } from '@/services/api';
 import ComponentCard from '@/components/common/ComponentCard';
@@ -153,14 +153,14 @@ export default function VideoList() {
       title: 'Name',
       render: (row) => (
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 overflow-hidden rounded-full">
+          <div className="w-10 h-10 overflow-hidden rounded-md">
             {row.thumbnail ? (
               <Image
                 width={40}
                 height={40}
-                className="rounded"
                 src={row.thumbnail}
                 alt={row.name ?? ''}
+                className="w-full h-full object-cover"
               />
             ) : (
               <AvatarText name={row.name ?? ''} />
@@ -244,7 +244,7 @@ export default function VideoList() {
           {ability.can('create', 'Worksheet') && (
             <Button
               size="sm"
-              className="text-gray-500 dark:text-gray-400 dark:hover:text-white/90 text-sm"
+              className="text-gray-500 dark:text-gray-400 dark:hover:text-white/90 text-sm dark:bg-gray-dark"
               variant="primary"
               onClick={() => router.push(`/enhance/${row.id}`)}
             >
@@ -291,13 +291,13 @@ export default function VideoList() {
             <div
               onDrop={handleDrop}
               onDragOver={handleDragOver}
-              className="border-2 border-dashed border-[#7aa6ff] rounded-xl px-10 pt-16 pb-10 flex flex-col items-center justify-center text-center bg-white"
+              className="border-2 border-dashed border-[#7aa6ff] dark:border-gray-500 rounded-xl px-10 pt-16 pb-10 flex flex-col items-center justify-center text-center bg-white dark:bg-gray-700"
             >
               <label htmlFor="video-upload" className="cursor-pointer">
-                <div className="bg-gray-200 mb-4 p-3 rounded-2xl hover:scale-120 transition-all">
+                <div className="bg-gray-200 mb-4 p-3 rounded-2xl hover:scale-120 transition-all dark:bg-gray-500">
                   <FolderInputIcon
                     size={40}
-                    className="text-gray-400 hover:text-blue-500 hover:scale-100 transition-all"
+                    className="text-gray-400 hover:text-blue-500 hover:scale-100 transition-all dark:hover:text-gray-300"
                     onClick={() => handleFileChange}
                   />
                 </div>
@@ -306,7 +306,7 @@ export default function VideoList() {
               <label htmlFor="video-upload" className="cursor-pointer">
                 <div className="text-gray-500 text-sm">
                   Drag and drop or{' '}
-                  <label className="text-blue-500 cursor-pointer text-bold font-bold">
+                  <label className="text-blue-500 cursor-pointer text-bold font-bold dark:text-gray-300">
                     Browse
                     <Input
                       id="video-upload"

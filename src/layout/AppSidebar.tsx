@@ -89,20 +89,24 @@ const AppSidebar: React.FC = () => {
           <Image
             src={
               isExpanded || isHovered
-                ? '/images/logo/logo.svg'
-                : '/images/logo/elpix-ai-black.svg'
+                ? '/images/logo/logo-black.png'
+                : '/images/logo/logo-icon-black.png'
             }
             alt="Logo"
-            width={isExpanded || isHovered ? 150 : 50}
-            height={40}
+            width={isExpanded || isHovered ? 170 : 35}
+            height={50}
             priority
             className="dark:hidden"
           />
           <Image
-            src="/images/logo/logo-dark.svg"
+            src={
+              isExpanded || isHovered
+                ? '/images/logo/logo.png'
+                : '/images/logo/logo-icon.png'
+            }
             alt="Logo"
-            width={150}
-            height={40}
+            width={isExpanded || isHovered ? 170 : 35}
+            height={50}
             priority
             className="hidden dark:block"
           />

@@ -86,21 +86,37 @@ export default function LoginForm() {
       <div className="flex flex-col justify-center w-full max-w-md mx-auto">
         <div className="flex flex-row justify-center sm:pt-10 mb-5">
           <Image
-            src="/images/logo/elpix-ai.svg"
+            src="/images/logo/auth-logo-black.png"
             alt="Login Background"
             width={120}
             height={38}
-            className="object-cover rounded-r-3xl"
+            className="object-cover rounded-r-3xl dark:hidden"
             priority
           />
-          <span className="text-2xl mx-2 my-1">for</span>
+          <Image
+            src="/images/logo/auth-logo.png"
+            alt="Login Background"
+            width={120}
+            height={38}
+            className="object-cover rounded-r-3xl hidden dark:block"
+            priority
+          />
+          <span className="text-2xl mx-2 my-1 dark:text-white">for</span>
           <Image
             src="/images/logo/tvri.png"
-            alt="Login Background"
+            alt="Logo TVRI"
             width={74}
             height={38}
-            className="object-cover rounded-r-3xl"
+            className="object-cover rounded-r-3xl dark:hidden"
             priority
+          />
+          <Image
+            src="/images/logo/tvri-black.png"
+            alt="Logo TVRI"
+            width={74}
+            height={38}
+            priority
+            className="object-cover rounded-r-3xl hidden dark:block"
           />
         </div>
         <div>
