@@ -9,7 +9,7 @@ export default function Background() {
         <Image
           width={231}
           height={48}
-          src="/images/logo/auth-logo.svg"
+          src="/images/logo/auth-logo.png"
           alt="Logo"
           className="w-[231px] h-[48px]"
         />

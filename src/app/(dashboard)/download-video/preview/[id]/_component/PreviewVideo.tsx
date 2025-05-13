@@ -16,8 +16,8 @@ export const PreviewVideo: React.FC<{ id: string }> = ({ id }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [videoAspect, setVideoAspect] = useState<'portrait' | 'landscape'>(
-    'landscape',
+  const [videoAspect, setVideoAspect] = useState<'h-screen w-auto max-w-[480px]' | 'w-full max-w-[960px] aspect-[16/9]'>(
+    'w-full max-w-[960px] aspect-[16/9]',
   );
   const [remainingTime, setRemainingTime] = useState('00.00.00');
 
@@ -134,9 +134,9 @@ export const PreviewVideo: React.FC<{ id: string }> = ({ id }) => {
       const datas: DownloadVideo = res.data;
       setData(datas);
       if (datas.height > datas.width) {
-        setVideoAspect('portrait');
+        setVideoAspect('h-screen w-auto max-w-[480px]');
       } else {
-        setVideoAspect('landscape');
+        setVideoAspect('w-full max-w-[960px] aspect-[16/9]');
       }
       setIsLoading(false);
 
@@ -202,10 +202,10 @@ export const PreviewVideo: React.FC<{ id: string }> = ({ id }) => {
         // <div className="mx-auto p-4 bg-gray-100 rounded-xl flex">
         //   <div className="flex-shrink-0 w-full h-full bg-gray-200 rounded-lg overflow-hidden">
         <div className="relative">
-          <div className={`video-wrapper ${videoAspect}`}>
+          <div className={`relative mx-auto bg-black overflow-hidden ${videoAspect}`}>
             <video
               ref={videoBeforeRef}
-              className="absolute w-full h-full object-cover before"
+              className="video before"
               preload="auto"
               src={data.previewVideos?.beforeVideo}
               muted
@@ -213,18 +213,22 @@ export const PreviewVideo: React.FC<{ id: string }> = ({ id }) => {
             />
             <video
               ref={videoAfterRef}
-              className="absolute w-full h-full object-cover after"
+              className="video after"
               preload="auto"
               src={data.previewVideos?.afterVideo}
               muted
               playsInline
             />
 
-            <div className="absolute px-[10px] py-[4px] border border-[#666] rounded-md bg-black/50 text-white font-semibold text-sm z-10 top-[10px] left-[10px]">Before</div>
-            <div className="absolute px-[10px] py-[4px] border border-[#666] rounded-md bg-black/50 text-white font-semibold text-sm z-10 top-[10px] right-[10px]">After</div>
+            <div className="absolute px-[10px] py-[4px] border border-[#666] rounded-md bg-black/50 text-white font-semibold text-sm z-9 top-[10px] left-[10px]">
+              Before
+            </div>
+            <div className="absolute px-[10px] py-[4px] border border-[#666] rounded-md bg-black/50 text-white font-semibold text-sm z-9 top-[10px] right-[10px]">
+              After
+            </div>
 
             <div
-              className="handle"
+              className="absolute top-0 bottom-0 w-[2px] bg-white z-9 cursor-ew-resize"
               style={{ left: '50%' }}
               role="slider"
               aria-valuenow={(currentTime / duration) * 100}
@@ -255,119 +259,32 @@ export const PreviewVideo: React.FC<{ id: string }> = ({ id }) => {
               }}
             />
 
-            <div className="custom-controls">
-              <button onClick={handlePlayPause} className="play-pause-btn">
+            <div className="absolute bottom-[12px] left-1/2 transform -translate-x-1/2 w-[95%] bg-black/50 p-[6px_12px] rounded-[12px] flex items-center gap-[12px] z-10">
+              <button
+                onClick={handlePlayPause}
+                className="bg-none border-none text-[18px] text-white cursor-pointer"
+              >
                 {isPlaying ? '⏸️' : '▶️'}
               </button>
               <input
                 type="range"
                 className="progress-bar"
-                min={0}
-                max={duration}
-                step={0.1}
-                value={currentTime}
-                onChange={handleSeek}
                 style={
                   {
                     '--progress': `${(currentTime / duration) * 100}%`,
                   } as React.CSSProperties
                 }
+                id="progress-bar"
+                min={0}
+                max={duration}
+                step={0.1}
+                value={currentTime}
+                onChange={handleSeek}
               />
-              <span className="duration">{remainingTime}</span>
+              <span className="text-white text-[13px]">{remainingTime}</span>
             </div>
           </div>
         </div>
-        // <div className="video-compare-container relative w-full rounded-lg overflow-hidden bg-white dark:bg-gray-900">
-        //   <div className={`video-wrapper relative w-full ${videoAspect}`}>
-        //     {/* BEFORE VIDEO */}
-        //     <video
-        //       ref={videoBeforeRef}
-        //       className="absolute top-0 left-0 w-full h-full object-cover z-0"
-        //       preload="auto"
-        //       src={data.previewVideos?.beforeVideo}
-        //       muted
-        //       playsInline
-        //     />
-
-        //     {/* AFTER VIDEO */}
-        //     <video
-        //       ref={videoAfterRef}
-        //       className="absolute top-0 left-0 w-full h-full object-cover z-10 clip-after"
-        //       preload="auto"
-        //       src={data.previewVideos?.afterVideo}
-        //       muted
-        //       playsInline
-        //     />
-
-        //     {/* Labels */}
-        //     <div className="absolute top-2 left-2 px-2 py-1 text-xs font-semibold rounded bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-100 z-20">
-        //       Before
-        //     </div>
-        //     <div className="absolute top-2 right-2 px-2 py-1 text-xs font-semibold rounded bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-100 z-20">
-        //       After
-        //     </div>
-
-        //     {/* Handle slider */}
-        //     <div
-        //       className="absolute top-0 bottom-0 w-1 bg-gray-300 dark:bg-gray-200 cursor-ew-resize z-30"
-        //       style={{ left: '50%' }}
-        //       role="slider"
-        //       aria-valuenow={(currentTime / duration) * 100}
-        //       onMouseDown={(e) => {
-        //         const wrapper = e.currentTarget.parentElement!;
-        //         const handle = e.currentTarget;
-        //         const afterVideo = wrapper.querySelector(
-        //           '.clip-after',
-        //         ) as HTMLElement;
-
-        //         const onMouseMove = (ev: MouseEvent) => {
-        //           const rect = wrapper.getBoundingClientRect();
-        //           let x = ev.clientX - rect.left;
-        //           x = Math.max(0, Math.min(x, rect.width));
-        //           const percent = (x / rect.width) * 100;
-
-        //           afterVideo.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
-        //           handle.style.left = `${percent}%`;
-        //         };
-
-        //         const onMouseUp = () => {
-        //           document.removeEventListener('mousemove', onMouseMove);
-        //           document.removeEventListener('mouseup', onMouseUp);
-        //         };
-
-        //         document.addEventListener('mousemove', onMouseMove);
-        //         document.addEventListener('mouseup', onMouseUp);
-        //       }}
-        //     />
-
-        //     {/* Controls */}
-        //     <div className="absolute bottom-0 left-0 right-0 bg-white/80 dark:bg-gray-900/80 px-4 py-2 flex items-center justify-between z-40">
-        //       <button
-        //         onClick={handlePlayPause}
-        //         className="text-lg font-medium text-gray-700 dark:text-gray-100"
-        //       >
-        //         {isPlaying ? '⏸️' : '▶️'}
-        //       </button>
-        //       <input
-        //         type="range"
-        //         min={0}
-        //         max={duration}
-        //         step={0.1}
-        //         value={currentTime}
-        //         onChange={handleSeek}
-        //         className="mx-4 flex-1 h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer accent-blue-600"
-        //         style={
-        //           {
-        //             '--progress': `${(currentTime / duration) * 100}%`,
-        //           } as React.CSSProperties
-        //         }
-        //       />
-        //       <span className="text-sm text-gray-500 dark:text-gray-300">
-        //         {remainingTime}
-        //       </span>
-        //     </div>
-        //   </div>
-        // </div>
 
         //   </div>
         // </div>
