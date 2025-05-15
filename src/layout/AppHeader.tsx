@@ -1,7 +1,6 @@
 'use client';
 import SwitchLanguage from '@/components/common/SwitchLanguage';
 import { ThemeToggleButton } from '@/components/common/ThemeToggleButton';
-import NotificationDropdown from '@/components/header/NotificationDropdown';
 import UserDropdown from '@/components/header/UserDropdown';
 import { useSidebar } from '@/context/SidebarContext';
 import Image from 'next/image';
@@ -108,7 +107,7 @@ const AppHeader: React.FC = () => {
             </svg>
           </button>
 
-          <div className="hidden lg:block">
+          {/* <div className="hidden lg:block">
             <form action="https://formbold.com/s/unique_form_id" method="POST">
               <div className="relative">
                 <button className="absolute -translate-y-1/2 left-4 top-1/2">
@@ -140,7 +139,7 @@ const AppHeader: React.FC = () => {
                 </button>
               </div>
             </form>
-          </div>
+          </div> */}
 
           <div className="hidden lg:block items-center gap-3">
             <SwitchLanguage />
@@ -156,7 +155,7 @@ const AppHeader: React.FC = () => {
             <ThemeToggleButton />
             {/* <!-- Dark Mode Toggler --> */}
 
-            <NotificationDropdown />
+            {/* <NotificationDropdown /> */}
             {/* <!-- Notification Menu Area --> */}
           </div>
           {/* <!-- User Area --> */}

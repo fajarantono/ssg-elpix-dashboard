@@ -205,7 +205,7 @@ export const PreviewVideo: React.FC<{ id: string }> = ({ id }) => {
           <div className={`relative mx-auto bg-black overflow-hidden ${videoAspect}`}>
             <video
               ref={videoBeforeRef}
-              className="video before"
+              className="video after"
               preload="auto"
               src={data.previewVideos?.beforeVideo}
               muted
@@ -213,7 +213,7 @@ export const PreviewVideo: React.FC<{ id: string }> = ({ id }) => {
             />
             <video
               ref={videoAfterRef}
-              className="video after"
+              className="video before"
               preload="auto"
               src={data.previewVideos?.afterVideo}
               muted

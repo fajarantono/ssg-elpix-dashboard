@@ -250,7 +250,7 @@ export const EnhanceVideo: React.FunctionComponent<{
           qscale: qscale,
           container: selectedSettings['67ff3b35b5cbc84cf90b8bb6'].value,
           chroma_subsampling: chromaSubsampling,
-          preview: true,
+          preview: false,
           start_frame: starFrame,
           end_frame: endFrame,
           input_video: data.id,
