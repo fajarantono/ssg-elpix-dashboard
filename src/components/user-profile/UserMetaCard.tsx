@@ -35,7 +35,7 @@ export const UserMetaCard: React.FunctionComponent<{ profile: Profile }> = ({
                   className="w-full h-full object-cover rounded-lg"
                 />
               ) : (
-                <AvatarText name={profile.username ?? ''} />
+                <AvatarText name={profile.username ?? ''} className="w-full h-full object-cover rounded-lg"/>
               )}
             </div>
             <div className="order-3 xl:order-2">
