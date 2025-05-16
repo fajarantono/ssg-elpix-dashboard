@@ -22,10 +22,10 @@ const schema = yup.object().shape({
   phone: yup.string().required('Phone is required'),
 });
 
-export const UserInfoCard: React.FunctionComponent<{ profile: Profile, refresh: () => void }> = ({
-  profile,
-  refresh,
-}) => {
+export const UserInfoCard: React.FunctionComponent<{
+  profile: Profile;
+  refresh: () => void;
+}> = ({ profile, refresh }) => {
   const { isOpen, openModal, closeModal } = useModal();
   const [isLoadIcon, setIsLoadIcon] = useState<boolean>(false);
 
@@ -178,7 +178,7 @@ export const UserInfoCard: React.FunctionComponent<{ profile: Profile, refresh: 
             </p>
           </div>
           <Form onSubmit={handleSubmit(handleSave)} className="space-y-4 mt-7">
-            <div className="custom-scrollbar h-[450px] overflow-y-auto px-2 pb-3">
+            <div className="custom-scrollbar h-auto overflow-y-auto px-2 pb-3">
               <div className="mt-7">
                 <h5 className="mb-5 text-lg font-medium text-gray-800 dark:text-white/90 lg:mb-6">
                   Personal Information

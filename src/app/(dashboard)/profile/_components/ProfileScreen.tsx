@@ -42,8 +42,8 @@ export default function ProfileScreen() {
               Profile
             </h3>
             <div className="space-y-6">
-              <UserMetaCard profile={data} />
-              <UserInfoCard profile={data} refresh={fetchData}/>
+              <UserMetaCard profile={data} refresh={fetchData} />
+              <UserInfoCard profile={data} refresh={fetchData} />
             </div>
           </div>
         </div>
