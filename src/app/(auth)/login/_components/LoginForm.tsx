@@ -77,7 +77,7 @@ export default function LoginForm() {
 
   useEffect(() => {
     if (redirecting) {
-      router.push('/dashboard');
+      router.push('/');
     }
   }, [redirecting, router]);
 

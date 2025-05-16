@@ -29,19 +29,33 @@ export default function LoginPage() {
                 src="/images/background/auth-bg.jpeg"
                 alt="Login Background"
                 fill
-                className="relative object-cover rounded-r-3xl"
+                className="relative object-cover rounded-r-3xl dark:hidden"
+                priority
+              />
+              <Image
+                src="/images/background/auth-bg-dark.png"
+                alt="Login Background"
+                fill
+                className="relative object-cover rounded-r-3xl dark:block"
                 priority
               />
               <div className="absolute bottom-6 left-6 flex items-center gap-2 z-10">
                 <Image
-                  src="/images/logo/elpix-ai-black.svg"
-                  alt="elPix AI Logo"
+                  src="/images/logo/logo-icon.png"
+                  alt="eLPix AI Logo"
                   width={20}
                   height={20}
-                  className="object-contain"
+                  className="object-contain dark:block"
                 />
-                <p className="text-black-500 text-xl font-medium">
-                  Powered by <span className="font-semibold">elPix AI</span>
+                <Image
+                  src="/images/logo/logo-icon-black.png"
+                  alt="eLPix AI Logo"
+                  width={20}
+                  height={20}
+                  className="object-contain dark:hidden"
+                />
+                <p className="text-black-500 text-xl font-medium  dark:text-white">
+                  Powered by <span className="font-semibold">eLPix AI</span>
                 </p>
               </div>
             </div>

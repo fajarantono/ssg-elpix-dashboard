@@ -1,5 +1,5 @@
-import { DownloadVideo } from '../../download-video/_interfaces/DownloadVideo';
-import { UploadedVideo } from '../../worksheet-video/_interfaces/WorksheetVideo';
+import { DownloadVideo } from '../download-video/_interfaces/DownloadVideo';
+import { UploadedVideo } from '../worksheet-video/_interfaces/WorksheetVideo';
 
 export interface Dashboard {
   videoCount: number;

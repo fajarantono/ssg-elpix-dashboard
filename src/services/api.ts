@@ -182,6 +182,38 @@ export const updated = async (
   }
 };
 
+export const updateProfile = async (
+  endpoint: string,
+  data: Record<string, string | number | boolean>,
+) => {
+  try {
+    const url = `${apiUrl}${endpoint}`;
+    const headers = await getHeaders();
+
+    const res = await fetch(url, {
+      method: 'PATCH',
+      headers,
+      body: JSON.stringify(data),
+    });
+
+    const response = await res.json();
+
+    if (!res.ok) {
+      const message = response.message;
+      throw new Error(message);
+    }
+
+    return response;
+  } catch (error) {
+    console.error('Error update profile:', error);
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    } else {
+      throw new Error('An unknown error occurred');
+    }
+  }
+};
+
 export const updatedWithQuery = async (
   endpoint: string,
   queryParams?: Record<string, string | number | boolean>,

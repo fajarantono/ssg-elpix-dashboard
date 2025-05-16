@@ -3,7 +3,6 @@ import ComponentCard from '@/components/common/ComponentCard';
 import { useCallback, useEffect, useState } from 'react';
 import { Analytics, AnalyticsValue } from '../_interfaces/Dashboard';
 import { getAllData } from '@/services/api';
-import LoadingChart from './LoadingChart';
 import ErrorPage from '@/components/pages/ErrorPage';
 
 function capitalizeWords(str: string): string {
@@ -19,7 +18,7 @@ function capitalizeWords(str: string): string {
 export default function AnalyticsChart() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [data, setData] = useState<Analytics | null>(null);
-  const [range, setRange] = useState<string | '7d' | '1m' | '3m' | '1y'>('1y');
+  const [range, setRange] = useState<string | '7d' | '1m' | '3m' | '1y'>('7d');
   const [error, setError] = useState<string | null>(null);
   const [series, setSeries] = useState<
     { name: string; data: number[]; color: string }[]
@@ -93,9 +92,8 @@ export default function AnalyticsChart() {
 
   return (
     <>
-      {isLoading && <LoadingChart />}
-      {error && <ErrorPage />}
-      {!isLoading && !error && data && (
+      {!isLoading && error && <ErrorPage />}
+      {!error && data && (
         <ComponentCard className="mb-5">
           <div className="flex flex-row items-end justify-between">
             <div className="flex flex-col gap-1">

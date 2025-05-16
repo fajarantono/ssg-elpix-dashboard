@@ -1,6 +1,6 @@
 import ComponentCard from '@/components/common/ComponentCard';
 import BasicTable from '@/components/tables/BasicTable';
-import { DownloadVideo } from '../../download-video/_interfaces/DownloadVideo';
+import { DownloadVideo } from '../download-video/_interfaces/DownloadVideo';
 import { ColumnProps } from '@/types/common';
 import Image from 'next/image';
 import AvatarText from '@/components/ui/avatar/AvatarText';
@@ -13,7 +13,7 @@ import {
   TooltipTrigger,
 } from '@radix-ui/react-tooltip';
 import { EyeIcon, HardDriveDownloadIcon } from 'lucide-react';
-import { UploadedVideo } from '../../worksheet-video/_interfaces/WorksheetVideo';
+import { UploadedVideo } from '../worksheet-video/_interfaces/WorksheetVideo';
 import Button from '@/components/ui/button/Button';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
@@ -207,7 +207,7 @@ export default function DashboardScreen() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-5">
             <ComponentCard>
               <h4 className="text-md font-bold dark:text-gray-300">
-                Uploaded Video
+                Upload Video
               </h4>
               <div className="flex flex-row items-end justify-between">
                 <h2 className="text-2xl font-bold dark:text-white">
@@ -240,44 +240,40 @@ export default function DashboardScreen() {
           </div>
           <AnalyticsChart />
           <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-5 mb-8">
-            <div>
-              <ComponentCard>
-                <div className="span">
-                  <h4 className="text-md font-bold dark:text-gray-300">
-                    Uploaded Videos
-                  </h4>
-                  <p className="text-gray-600">List update uploaded videos</p>
-                </div>
-                <BasicTable
-                  columns={ListColumnVideo}
-                  data={data.video}
-                  variant={{
-                    striped: true,
-                    sm: true,
-                    hover: true,
-                  }}
-                />
-              </ComponentCard>
-            </div>
-            <div>
-              <ComponentCard>
-                <div className="span">
-                  <h4 className="text-md font-bold dark:text-gray-300">
-                    Enhanced Videos
-                  </h4>
-                  <p className="text-gray-600">List update enhanced videos</p>
-                </div>
-                <BasicTable
-                  columns={ListColumnEnhance}
-                  data={data.enhance}
-                  variant={{
-                    striped: true,
-                    sm: true,
-                    hover: true,
-                  }}
-                />
-              </ComponentCard>
-            </div>
+            <ComponentCard>
+              <div className="span">
+                <h4 className="text-md font-bold dark:text-gray-300">
+                  Uploaded Videos
+                </h4>
+                <p className="text-gray-600">List update uploaded videos</p>
+              </div>
+              <BasicTable
+                columns={ListColumnVideo}
+                data={data.video}
+                variant={{
+                  striped: true,
+                  sm: true,
+                  hover: true,
+                }}
+              />
+            </ComponentCard>
+            <ComponentCard>
+              <div className="span">
+                <h4 className="text-md font-bold dark:text-gray-300">
+                  Enhanced Videos
+                </h4>
+                <p className="text-gray-600">List update enhanced videos</p>
+              </div>
+              <BasicTable
+                columns={ListColumnEnhance}
+                data={data.enhance}
+                variant={{
+                  striped: true,
+                  sm: true,
+                  hover: true,
+                }}
+              />
+            </ComponentCard>
           </div>
         </>
       )}

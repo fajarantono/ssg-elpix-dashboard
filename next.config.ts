@@ -7,6 +7,12 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
+        protocol: 'http',
+        hostname: '127.0.0.1',
+        port: '8010',
+        pathname: '/uploads/avatar/**',
+      },
+      {
         protocol: 'https',
         hostname: 'ssg-elpix-api.alfanium.id',
         port: '',
@@ -14,7 +20,8 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: '76e364c14b64f75b79dd8f3ce637ae32.eu.r2.cloudflarestorage.com',
+        hostname:
+          '76e364c14b64f75b79dd8f3ce637ae32.eu.r2.cloudflarestorage.com',
         port: '',
         pathname: '/**',
       },

@@ -1,12 +1,12 @@
 import { Metadata } from 'next';
-import DashboardPage from './DashboardPage';
+import ProfilePage from './ProfilePage';
 
 export const metadata: Metadata = {
-  title: `Dashboard - ${
+  title: `Profile - ${
     process.env.NEXT_PUBLIC_PROJECT_NAME ?? 'Elpix Dashboard'
   }`,
 };
 
 export default function Page() {
-  return <DashboardPage />;
+  return <ProfilePage />;
 }

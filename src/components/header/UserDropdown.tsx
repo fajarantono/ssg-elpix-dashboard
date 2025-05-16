@@ -1,22 +1,26 @@
-"use client";
-import Image from "next/image";
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import { Dropdown } from "../ui/dropdown/Dropdown";
-import { DropdownItem } from "../ui/dropdown/DropdownItem";
-import { logout } from "@/services";
-import AvatarText from "../ui/avatar/AvatarText";
-import { SkeletonLoader } from "../common/SkeletonLoader";
-import { getUser } from "@/lib/cookies";
+'use client';
+import Image from 'next/image';
+import Link from 'next/link';
+import React, { useEffect, useState } from 'react';
+import { Dropdown } from '../ui/dropdown/Dropdown';
+import { DropdownItem } from '../ui/dropdown/DropdownItem';
+import { logout } from '@/services';
+import AvatarText from '../ui/avatar/AvatarText';
+import { SkeletonLoader } from '../common/SkeletonLoader';
+import { getUser } from '@/lib/cookies';
 
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);
-  const [profile, setProfile] = useState({ fullName: "", email: "", avatarFile: "" });
-  
+  const [profile, setProfile] = useState({
+    fullName: '',
+    email: '',
+    avatarFile: '',
+  });
+
   useEffect(() => {
     const userCookie = getUser();
 
-    if(userCookie) {
+    if (userCookie) {
       const fullName = userCookie.fullname ?? 'User';
       const email = userCookie.email || 'user@demo.com';
       const avatarFile = userCookie.avatarFile ?? '';
@@ -45,8 +49,9 @@ export default function UserDropdown() {
             <Image
               width={44}
               height={44}
-              src={`${process.env.NEXT_PUBLIC_CDN_URL}/avatar/${profile.avatarFile}`}
+              src={profile.avatarFile}
               alt="User"
+              className="w-full h-full object-cover rounded-lg"
             />
           ) : (
             <AvatarText name={profile.fullName} />
@@ -121,7 +126,7 @@ export default function UserDropdown() {
               Profile
             </DropdownItem>
           </li>
-          <li>
+          {/* <li>
             <DropdownItem
               onItemClick={closeDropdown}
               tag="a"
@@ -145,7 +150,7 @@ export default function UserDropdown() {
               </svg>
               Account settings
             </DropdownItem>
-          </li>
+          </li> */}
           {/* <li>
             <DropdownItem
               onItemClick={closeDropdown}
