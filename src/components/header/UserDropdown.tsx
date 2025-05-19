@@ -38,6 +38,14 @@ export default function UserDropdown() {
     setIsOpen(false);
   }
 
+  const checkProfile = (url: string): string => {
+    const temp = profile.avatarFile.split('/');
+    if (temp[temp.length - 1] === '') {
+      return '';
+    }
+    return url;
+  };
+
   return (
     <div className="relative">
       <button
@@ -45,7 +53,7 @@ export default function UserDropdown() {
         className="flex items-center text-gray-700 dark:text-gray-400 dropdown-toggle"
       >
         <span className="mr-3 overflow-hidden rounded-full h-11 w-11">
-          {profile.avatarFile ? (
+          {checkProfile(profile.avatarFile) ? (
             <Image
               width={44}
               height={44}

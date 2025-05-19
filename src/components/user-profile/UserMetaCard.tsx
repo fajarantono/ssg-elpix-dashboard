@@ -78,7 +78,7 @@ export const UserMetaCard: React.FunctionComponent<{
           position: 'top-right',
           autoClose: 5000,
           theme: 'colored',
-        });        
+        });
         refresh();
         closeModal();
       } catch (error) {
@@ -105,13 +105,21 @@ export const UserMetaCard: React.FunctionComponent<{
     openModal();
   };
 
+  const checkProfile = (url: string): string => {
+    const temp = profile.avatarFile.split('/');
+    if (temp[temp.length - 1] === '') {
+      return '';
+    }
+    return url;
+  };
+
   return (
     <>
       <div className="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
         <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
           <div className="flex flex-col items-center w-full gap-6 xl:flex-row">
             <div className="w-20 h-20 overflow-hidden border border-gray-200 rounded-full dark:border-gray-800">
-              {profile.avatarFile !== '' ? (
+              {checkProfile(profile.avatarFile) !== '' ? (
                 <Image
                   width={80}
                   height={80}
@@ -246,7 +254,7 @@ export const UserMetaCard: React.FunctionComponent<{
           <Form onSubmit={handleSubmit(handleSave)} className="flex flex-col">
             <div className="custom-scrollbar h-auto pb-3 overflow-y-auto px-2 flex flex-row gap-3">
               <div>
-                {avatarPreview && avatarPreview !== '' ? (
+                {avatarPreview && checkProfile(avatarPreview) !== '' ? (
                   <Image
                     src={avatarPreview}
                     alt="Avatar Preview"
