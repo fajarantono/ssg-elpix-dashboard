@@ -15,7 +15,7 @@ import {
   ScissorsIcon,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { MLModel } from '../_interfaces/MlData';
+import { Enhancer, MLModel } from '../_interfaces/MlData';
 import {
   Accordion,
   AccordionContent,
@@ -31,13 +31,6 @@ import { Slider } from '@/components/ui/slider/Slider';
 import { toast } from 'react-toastify';
 import ErrorPage from '@/components/pages/ErrorPage';
 import LoadingForm from './LoadingForm';
-
-type Feature = {
-  id: string;
-  name: string;
-  icon: string;
-  mlModels: MLModel[];
-};
 
 interface SettingValue {
   id: string;
@@ -118,7 +111,7 @@ export const EnhanceVideo: React.FunctionComponent<{
   id: string;
 }> = ({ id }) => {
   const [data, setData] = useState<UploadedVideo | null>(null);
-  const [mlFeatures, setMlFeatures] = useState<Feature[]>([]);
+  const [mlFeatures, setMlFeatures] = useState<Enhancer[]>([]);
   const [mlSettings, setMlSettings] = useState<Setting[]>([]);
   const [credit, setCredit] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -432,7 +425,7 @@ export const EnhanceVideo: React.FunctionComponent<{
                                 size={40}
                                 className="w-6 h-6 text-gray-600 dark:text-gray-300 me-2"
                               />
-                              {feature.name}
+                              {feature.name} {feature.isDisable ? '(Please Contact)' : ''}
                             </div>
                             <div className="flex flex-wrap gap-2 flex-1">
                               {feature.mlModels.map((model) => {
@@ -443,7 +436,7 @@ export const EnhanceVideo: React.FunctionComponent<{
                                   <button
                                     key={model.id}
                                     onClick={() =>
-                                      handleSelectModel(feature.id, model)
+                                      !feature.isDisable && handleSelectModel(feature.id.toString(), model)
                                     }
                                     className={`px-3 py-1 rounded-full text-md border transition-colors
                                     ${
@@ -451,10 +444,11 @@ export const EnhanceVideo: React.FunctionComponent<{
                                         ? 'bg-blue-600 text-white border-blue-600'
                                         : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700'
                                     }
+                                    ${feature.isDisable ? 'opacity-50 cursor-not-allowed' : ''}
                                   `}
                                   >
                                     <div className="flex flex-row">
-                                      {isSelected && (
+                                      {isSelected && !feature.isDisable &&  (
                                         <CheckIcon className="w-4 h-4 me-2 mt-0.5" />
                                       )}
                                       {model.name}

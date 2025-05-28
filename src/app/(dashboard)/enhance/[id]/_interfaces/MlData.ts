@@ -12,9 +12,12 @@ export interface MLModel extends Main {
 
 export interface Enhancer extends Main {
   name: string;
+  description: string;
+  videoUrl: string;
   task: number;
   sequenceNo: number;
   icon: string;
+  isDisable: boolean;
   isActive: boolean;
   updatedAt: string; // sama seperti di atas
   mlModels: MLModel[];
