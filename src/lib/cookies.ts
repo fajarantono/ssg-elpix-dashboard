@@ -39,8 +39,20 @@ export const setToken = (token: string, expiredToken: string) => {
   });
 };
 
-export const setRefreshToken = (refreshToken: string) => {
-  setCookie('refresh_token', refreshToken, cookieOptions);
+// export const setRefreshToken = (refreshToken: string) => {
+//   setCookie('refresh_token', refreshToken, cookieOptions);
+// };
+
+export const setRefreshToken = (
+  refreshToken: string,
+  expiredToken: string,
+) => {
+  const expiredTimestamp = getTimestampFromExpiredToken(expiredToken);
+  // Default maxAge: 30 hari (dalam detik)
+  setCookie('refresh_token', refreshToken, {
+    ...cookieOptions,
+    maxAge: expiredTimestamp - Date.now(),
+  });
 };
 
 export const setExpiredToken = (expiredToken: number) => {

@@ -7,12 +7,13 @@ import ComponentCard from '@/components/common/ComponentCard';
 import Button from '@/components/ui/button/Button';
 import {
   CheckIcon,
-  ClockIcon,
-  FilmIcon,
   LucideArrowLeftFromLine,
   LucideTvMinimalPlay,
-  ScanIcon,
   ScissorsIcon,
+  ScanEye,
+  Sparkles,
+  SlidersHorizontal,
+  Settings,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Enhancer, MLModel } from '../_interfaces/MlData';
@@ -22,15 +23,25 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion/Accordion';
-import { duration, getVideoQuality } from '@/lib/utils';
+import Switch from '@/components/form/switch/Switch';
+import { cn, duration, getVideoQuality } from '@/lib/utils';
 import { UploadedVideo } from '@/app/(dashboard)/worksheet-video/_interfaces/WorksheetVideo';
 import Image from 'next/image';
-import AvatarText from '@/components/ui/avatar/AvatarText';
 import Icon from '@/components/ui/icon';
 import { Slider } from '@/components/ui/slider/Slider';
 import { toast } from 'react-toastify';
 import ErrorPage from '@/components/pages/ErrorPage';
 import LoadingForm from './LoadingForm';
+import {
+  Tooltip,
+  TooltipArrow,
+  TooltipContent,
+  TooltipPortal,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@radix-ui/react-tooltip';
+import VideoExample from './VideoExample';
+import VideoInfo from './VideoInfo';
 
 interface SettingValue {
   id: string;
@@ -118,6 +129,7 @@ export const EnhanceVideo: React.FunctionComponent<{
   const [isLoadingIcon, setIsLoadingIcon] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [rangeValue, setRangeValue] = useState<[number, number]>([0, 100]);
+  const [previewEnabled, setPreviewEnabled] = useState(false);
 
   const [selectedModels, setSelectedModels] = useState<
     Record<string, MLModel | null>
@@ -243,7 +255,7 @@ export const EnhanceVideo: React.FunctionComponent<{
           qscale: qscale,
           container: selectedSettings['67ff3b35b5cbc84cf90b8bb6'].value,
           chroma_subsampling: chromaSubsampling,
-          preview: false,
+          preview: previewEnabled,
           start_frame: starFrame,
           end_frame: endFrame,
           input_video: data.id,
@@ -288,82 +300,217 @@ export const EnhanceVideo: React.FunctionComponent<{
   }, [getDataVideo, getCredit, getMlModels, getSettingModels]);
 
   return (
-    <>
+    <React.Fragment>
+      <Button
+        onClick={router.back}
+        startIcon={<LucideArrowLeftFromLine size={15} />}
+        size="xs"
+        variant="outline"
+        className={cn(
+          'text-md text-gray-500 p-2 dark:text-gray-300 rounded-xl border-1 mb-0',
+        )}
+      >
+        <span>Uploaded Video</span>
+      </Button>
+
       {ability.can('read', 'Worksheet') && (
-        <div className="flex flex-row space-x-5">
-          <div className="flex flex-col flex-1 space-y-5">
-            <ComponentCard className="w-full">
-              <Button
-                onClick={router.back}
-                startIcon={<LucideArrowLeftFromLine size={30} />}
-                size="xs"
-                variant="none"
-              >
-                <h3 className="text-lg font-semibold hover:text-gray-800 hover:dark:text-white/90">
-                  Uploaded Video
-                </h3>
-              </Button>
-
-              {isLoading ? (
-                <LoadingForm />
-              ) : (
-                <div className="max-w-2xl mx-auto p-4 bg-gray-100 rounded-xl flex gap-4  dark:bg-gray-800">
-                  <div className="flex-shrink-0 w-64 h-40 bg-gray-200 rounded-lg overflow-hidden">
-                    {data?.thumbnail ? (
-                      <Image
-                        width={480}
-                        height={200}
-                        src={data?.thumbnail}
-                        alt="Video thumbnail"
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <AvatarText name={data?.name ?? ''} />
-                    )}
+        <React.Fragment>
+          {error && <ErrorPage />}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+            {/* Left Column */}
+            <div className="flex flex-col flex-1 min-h-[80vh]">
+              <div className="sticky top-22 z-1 space-y-5">
+                {/* card video */}
+                <ComponentCard>
+                  <div className="flex items-center gap-x-2 mb-3">
+                    <LucideTvMinimalPlay className="text-gray-700 dark:text-gray-300" />
+                    <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
+                      Info Video
+                    </h3>
                   </div>
+                  {isLoading ? <LoadingForm /> : <VideoInfo data={data} />}
+                </ComponentCard>
+              </div>
+            </div>
 
-                  <div className="flex-grow">
-                    <div className="text-lg font-semibold text-gray-800 truncate mb-1 overflow-ellipsis dark:text-white">
-                      {data?.name}
-                    </div>
-
-                    <div className="text-blue-500 font-medium text-sm mb-3 dark:text-gray-300">
-                      Upload Complete
-                    </div>
-
-                    <div className="space-y-">
-                      <div className="flex items-center">
-                        <ClockIcon className="w-4 h-4 mr-2 text-gray-600 dark:text-gray-400" />
-                        <span className="text-gray-600 dark:text-gray-400">
-                          {duration(
-                            (data?.nFrames ?? 0) / (data?.framerate ?? 0),
-                          )}
-                        </span>
+            {/* Right Column */}
+            <div className="flex flex-col min-h-[80vh] space-y-5">
+              {/* ML Models */}
+              <ComponentCard>
+                <Accordion type="multiple" defaultValue={['item-1']}>
+                  <AccordionItem value="item-1">
+                    <AccordionTrigger className="text-lg font-outfit font-semibold dark:text-white pt-0 flex flex-row">
+                      <div className="flex items-center gap-2">
+                        <SlidersHorizontal />
+                        <span>Select AI Filter</span>
                       </div>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="space-y-6 border-t-2 pt-5 dark:border-gray-700">
+                        {mlFeatures.map((feature) => (
+                          <div
+                            key={feature.id}
+                            className="border-t pt-4 first:border-none first:pt-0 dark:border-gray-700"
+                          >
+                            <div className="flex flex-wrap items-start sm:flex-nowrap gap-4 sm:gap-12 justify-center">
+                              <h3 className="flex w-full max-w-[220px] text-nowrap items-center justify-center sm:justify-between gap-4">
+                                <div className="hover:cursor-pointer">
+                                  <TooltipProvider delayDuration={100}>
+                                    <Tooltip>
+                                      <TooltipTrigger asChild>
+                                        <div className="flex items-start gap-2 text-base font-medium text-black dark:text-gray-100">
+                                          <Icon
+                                            name={feature.icon}
+                                            size={40}
+                                            className="w-6 h-6 text-gray-600 dark:text-gray-300 me-2"
+                                          />
+                                          <div className="flex items-center gap-1">
+                                            <span>{feature.name}</span>
+                                            <Icon
+                                              name="CircleHelp"
+                                              size={14}
+                                              className="opacity-60"
+                                            />
+                                          </div>
+                                        </div>
+                                      </TooltipTrigger>
+                                      <TooltipPortal>
+                                        <TooltipContent
+                                          side="top"
+                                          sideOffset={8}
+                                          className="relative z-50 w-[500px] rounded-lg border bg-white p-4 shadow-xl dark:bg-gray-800 dark:border-gray-700"
+                                        >
+                                          <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                                            {feature.name}
+                                          </h4>
+                                          <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
+                                            {feature.description}
+                                          </p>
+                                          <div>
+                                            <VideoExample
+                                              videoUrl={feature.videoUrl}
+                                            />
+                                          </div>
+                                          <TooltipArrow className="fill-white dark:fill-gray-800" />
+                                        </TooltipContent>
+                                      </TooltipPortal>
+                                    </Tooltip>
+                                  </TooltipProvider>
+                                </div>
+                              </h3>
 
-                      <div className="flex items-center">
-                        <FilmIcon className="w-4 h-4 mr-2 text-gray-600 dark:text-gray-400" />
-                        <span className="text-gray-600 dark:text-gray-400">
-                          {data?.framerate} FPS
-                        </span>
-                      </div>
+                              <div className="w-full">
+  <div className="items-center text-xs md:text-sm">
+    <div className="flex gap-1 sm:gap-2 flex-wrap justify-center sm:justify-start">
+      {feature.mlModels.map((model) => {
+        const isSelected = selectedModels[feature.id] === model;
+        return (
+          <button
+            key={model.id}
+            onClick={() =>
+              !feature.isDisable &&
+              handleSelectModel(feature.id.toString(), model)
+            }
+            disabled={feature.isDisable}
+            className={`px-6 py-2 border border-primary rounded-xl text-md border-blue-400 transition-colors text-center text-sm
+              ${
+                isSelected
+                  ? 'bg-blue-600 text-white border-blue-600'
+                  : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700'
+              }
+              ${feature.isDisable ? 'opacity-50 cursor-not-allowed' : ''}
+            `}
+          >
+            <div className="flex flex-row">{model.name}</div>
+          </button>
+        );
+      })}
+    </div>
 
-                      <div className="flex items-center">
-                        <ScanIcon className="w-4 h-4 mr-2 text-gray-600 dark:text-gray-400" />
-                        <span className="text-gray-600 dark:text-gray-400">
-                          {data?.width}x{data?.height}&nbsp;
-                          {getVideoQuality({
-                            width: data?.width ?? 1,
-                            height: data?.height ?? 1,
-                            bitrate: data?.bitrate,
-                          })}
-                        </span>
+    {/* Show warning once per feature */}
+    {feature.isDisable && (
+      <span className="block mt-2 text-xs text-red-500">
+        Please contact administrator to select this filter
+      </span>
+    )}
+  </div>
+</div>
+
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </ComponentCard>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </ComponentCard>
+              {/* Setting */}
+              <ComponentCard>
+                <Accordion type="multiple">
+                  <AccordionItem value="setting">
+                    <AccordionTrigger className="text-lg font-outfit font-semibold dark:text-white pt-0">
+                      <div className="flex items-center gap-2">
+                        <Settings/>
+                        <span>Setting</span>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="space-y-6 border-t-2 pt-5 dark:border-gray-700">
+                        {mlSettings.map((setting) => (
+                          <div
+                            key={setting.id}
+                            className="border-t pt-4 first:border-none first:pt-0 dark:border-gray-700"
+                          >
+                            <div className="flex flex-wrap items-start gap-2 py-1">
+                              <div className="flex items-center gap-2 w-[270px] text-lg font-medium dark:text-gray-100">
+                                <Icon
+                                  name={setting.icon}
+                                  size={40}
+                                  className="w-6 h-6 text-gray-600 dark:text-gray-300 me-2"
+                                />
+                                {setting.name}
+                              </div>
+                              <div className="flex flex-wrap gap-2 flex-1">
+                                {setting.settingValues.map((value) => {
+                                  const isSelected =
+                                    selectedSettings[setting.id] === value;
+
+                                  return (
+                                    <button
+                                      key={value.id}
+                                      onClick={() =>
+                                        handleSelect(setting.id, value)
+                                      }
+                                      className={`px-3 py-1 rounded-full text-md border transition-colors
+                                      ${
+                                        isSelected
+                                          ? 'bg-blue-600 text-white border-blue-600'
+                                          : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700'
+                                      }
+                                    `}
+                                    >
+                                      <div className="flex flex-row">
+                                        {isSelected && (
+                                          <CheckIcon className="w-4 h-4 me-2 mt-0.5" />
+                                        )}
+                                        {value.name}
+                                      </div>
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </ComponentCard>
+            </div>
+          </div>
+
+          <div className="w-full bottom-3">
             <ComponentCard>
               <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90 flex flex-row">
                 <ScissorsIcon className="me-2" />
@@ -371,158 +518,67 @@ export const EnhanceVideo: React.FunctionComponent<{
               </h3>
               <Slider value={rangeValue} onChange={setRangeValue} />
             </ComponentCard>
-            <ComponentCard>
-              <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-                Credits
-              </h3>
-              <h5 className="text-md font-normal text-blue-500 dark:text-white/90">
-                {credit}
-              </h5>
-            </ComponentCard>
-            <ComponentCard>
-              <Button
-                size="sm"
-                tooltip="Enhance"
-                className="w-full text-lg text-gray-500 dark:text-gray-300"
-                variant="primary"
-                startIcon={
-                  <LucideTvMinimalPlay
-                    size="20"
-                    className="dark:text-gray-200"
-                  />
-                }
-                onClick={handleEnhance}
-                disabled={
-                  !(getSelected(selectedModels).length > 0 && isLoadingIcon)
-                }
+          </div>
+
+          <div className="w-full sticky bottom-3 pb-1.5 z-10">
+            <div>
+              <div
+                className={cn(
+                  'bg-gray-100 dark:bg-gray-800',
+                  'border border-gray-300 dark:border-gray-600',
+                  'text-xs lg:text-sm gap-2.5 md:gap-4 py-2 md:py-2 px-6',
+                  'text-gray-800 dark:text-white',
+                  'rounded-2xl flex justify-center lg:justify-between items-center flex-wrap'
+                )}
               >
-                <h3 className="text-lg font-semibold text-white dark:text-white">
-                  Create
-                </h3>
-              </Button>
-            </ComponentCard>
-            {error && <ErrorPage />}
-          </div>
-
-          <div className="w-full flex-1">
-            <ComponentCard>
-              <Accordion type="multiple" defaultValue={['item-1']}>
-                <AccordionItem value="item-1">
-                  <AccordionTrigger className="text-lg font-outfit font-semibold dark:text-white">
-                    Select AI Filter
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <div className="space-y-6 border-t-2 pt-5 dark:border-gray-700">
-                      {mlFeatures.map((feature) => (
-                        <div
-                          key={feature.id}
-                          className="border-t pt-4 first:border-none first:pt-0 dark:border-gray-700"
-                        >
-                          <div className="flex flex-wrap items-start gap-2 py-1">
-                            <div className="flex items-center gap-2 w-[170px] text-lg font-medium dark:text-gray-100">
-                              <Icon
-                                name={feature.icon}
-                                size={40}
-                                className="w-6 h-6 text-gray-600 dark:text-gray-300 me-2"
-                              />
-                              {feature.name} {feature.isDisable ? '(Please Contact)' : ''}
-                            </div>
-                            <div className="flex flex-wrap gap-2 flex-1">
-                              {feature.mlModels.map((model) => {
-                                const isSelected =
-                                  selectedModels[feature.id] === model;
-
-                                return (
-                                  <button
-                                    key={model.id}
-                                    onClick={() =>
-                                      !feature.isDisable && handleSelectModel(feature.id.toString(), model)
-                                    }
-                                    className={`px-3 py-1 rounded-full text-md border transition-colors
-                                    ${
-                                      isSelected
-                                        ? 'bg-blue-600 text-white border-blue-600'
-                                        : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700'
-                                    }
-                                    ${feature.isDisable ? 'opacity-50 cursor-not-allowed' : ''}
-                                  `}
-                                  >
-                                    <div className="flex flex-row">
-                                      {isSelected && !feature.isDisable &&  (
-                                        <CheckIcon className="w-4 h-4 me-2 mt-0.5" />
-                                      )}
-                                      {model.name}
-                                    </div>
-                                  </button>
-                                );
-                              })}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
+                <div className="flex-grow flex justify-between flex-wrap items-center text-sm gap-x-5 gap-y-1.5">
+                  <div className="flex items-center grow order-2">
+                    <ScanEye className="mr-1.5" />
+                    <span className="me-2">Preview</span>
+                    <div>
+                      <Switch
+                        checked={previewEnabled}
+                        onCheckedChange={(checked) => setPreviewEnabled(checked)}
+                      />
                     </div>
-                  </AccordionContent>
-                </AccordionItem>
-                <AccordionItem value="item-2">
-                  <AccordionTrigger className="text-lg font-outfit font-semibold dark:text-white">
-                    Setting
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <div className="space-y-6 border-t-2 pt-5 dark:border-gray-700">
-                      {mlSettings.map((setting) => (
-                        <div
-                          key={setting.id}
-                          className="border-t pt-4 first:border-none first:pt-0 dark:border-gray-700"
-                        >
-                          <div className="flex flex-wrap items-start gap-2 py-1">
-                            <div className="flex items-center gap-2 w-[170px] text-lg font-medium dark:text-gray-100">
-                              <Icon
-                                name={setting.icon}
-                                size={40}
-                                className="w-6 h-6 text-gray-600 dark:text-gray-300 me-2"
-                              />
-                              {setting.name}
-                            </div>
-                            <div className="flex flex-wrap gap-2 flex-1">
-                              {setting.settingValues.map((value) => {
-                                const isSelected =
-                                  selectedSettings[setting.id] === value;
-
-                                return (
-                                  <button
-                                    key={value.id}
-                                    onClick={() =>
-                                      handleSelect(setting.id, value)
-                                    }
-                                    className={`px-3 py-1 rounded-full text-md border transition-colors
-                                    ${
-                                      isSelected
-                                        ? 'bg-blue-600 text-white border-blue-600'
-                                        : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700'
-                                    }
-                                  `}
-                                  >
-                                    <div className="flex flex-row">
-                                      {isSelected && (
-                                        <CheckIcon className="w-4 h-4 me-2 mt-0.5" />
-                                      )}
-                                      {value.name}
-                                    </div>
-                                  </button>
-                                );
-                              })}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
+                  </div>
+                  <div className="items-center flex gap-3 order-2">
+                    <div className="flex items-center gap-1">
+                      <div>{credit}</div>
+                      <Image
+                        src="/images/icons/coin.svg"
+                        alt="Coin"
+                        width={16}
+                        height={16}
+                      />
+                      <span> Credits </span>
                     </div>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-            </ComponentCard>
+                  </div>
+                </div>
+                <Button
+                  size="md"
+                  tooltip="Enhance"
+                  className="text-md text-gray-500 dark:text-gray-300 rounded-xl"
+                  variant="primary"
+                  startIcon={
+                    <Sparkles size="20" className="dark:text-gray-200" />
+                  }
+                  onClick={handleEnhance}
+                  disabled={
+                    !(getSelected(selectedModels).length > 0 && isLoadingIcon)
+                  }
+                >
+                  <div>
+                    {getSelected(selectedModels).length > 0 && isLoadingIcon
+                      ? 'Enhance'
+                      : 'Select at least 1 filter'}
+                  </div>
+                </Button>
+              </div>
+            </div>
           </div>
-        </div>
+        </React.Fragment>
       )}
-    </>
+    </React.Fragment>
   );
 };

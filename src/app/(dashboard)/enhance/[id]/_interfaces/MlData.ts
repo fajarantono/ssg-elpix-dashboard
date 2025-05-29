@@ -8,6 +8,7 @@ export interface MLModel extends Main {
   fpsBoostFactor: number;
   priority: number;
   maxResolution: number;
+  isDisabled?: boolean;
 }
 
 export interface Enhancer extends Main {
