@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import AvatarText from "@/components/ui/avatar/AvatarText";
+import Badge from '@/components/ui/badge/Badge';
 import { ClockIcon, FilmIcon, ScanIcon } from "lucide-react";
 import { duration, getVideoQuality } from "@/lib/utils";
 
@@ -14,51 +15,51 @@ interface UploadedVideo {
   bitrate?: number;
 }
 
-interface VideoInfoCardProps {
+interface VideoInfoProps {
   data: UploadedVideo | null;
 }
 
-const VideoInfoCard: React.FC<VideoInfoCardProps> = ({ data }) => {
+const VideoInfo: React.FC<VideoInfoProps> = ({ data }) => {
   return (
-    <div className="max-w-2xl mx-auto p-4 bg-gray-100 rounded-xl flex gap-4 dark:bg-gray-800">
-      <div className="flex-shrink-0 w-64 h-40 bg-gray-200 rounded-lg overflow-hidden">
+    <div className="p-4 rounded-xl bg-gray-100 dark:bg-gray-800">
+      <div className="relative w-full aspect-video bg-gray-200 rounded-lg overflow-hidden mb-3">
         {data?.thumbnail ? (
           <Image
-            width={480}
-            height={200}
-            src={data?.thumbnail}
+            src={data.thumbnail}
             alt="Video thumbnail"
-            className="w-full h-full object-cover"
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 480px"
           />
         ) : (
-          <AvatarText name={data?.name ?? ""} />
+          <div className="w-full h-full flex items-center justify-center">
+            <AvatarText name={data?.name ?? ''} />
+          </div>
         )}
       </div>
-
+  
       <div className="flex-grow">
         <div className="text-lg font-semibold text-gray-800 truncate mb-1 overflow-ellipsis dark:text-white">
           {data?.name}
         </div>
-
-        <div className="text-blue-500 font-medium text-sm mb-3 dark:text-gray-300">
-          Upload Complete
-        </div>
-
-        <div>
+        
+        <Badge size="md" color="success">Upload Complete</Badge>
+  
+        <div className="space-y-1 text-sm pt-2">
           <div className="flex items-center">
             <ClockIcon className="w-4 h-4 mr-2 text-gray-600 dark:text-gray-400" />
             <span className="text-gray-600 dark:text-gray-400">
               {duration((data?.nFrames ?? 0) / (data?.framerate ?? 0))}
             </span>
           </div>
-
+  
           <div className="flex items-center">
             <FilmIcon className="w-4 h-4 mr-2 text-gray-600 dark:text-gray-400" />
             <span className="text-gray-600 dark:text-gray-400">
               {data?.framerate} FPS
             </span>
           </div>
-
+  
           <div className="flex items-center">
             <ScanIcon className="w-4 h-4 mr-2 text-gray-600 dark:text-gray-400" />
             <span className="text-gray-600 dark:text-gray-400">
@@ -73,7 +74,7 @@ const VideoInfoCard: React.FC<VideoInfoCardProps> = ({ data }) => {
         </div>
       </div>
     </div>
-  );
+  );  
 };
 
-export default VideoInfoCard;
+export default VideoInfo;

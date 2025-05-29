@@ -16,7 +16,6 @@ export interface Enhancer extends Main {
   description: string;
   videoUrl: string;
   task: number;
-  description: string;
   sequenceNo: number;
   icon: string;
   isDisable: boolean;
