@@ -15,7 +15,7 @@ import {
   ScissorsIcon,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { MLModel } from '../_interfaces/MlData';
+import { Enhancer, MLModel } from '../_interfaces/MlData';
 import {
   Accordion,
   AccordionContent,
@@ -36,6 +36,7 @@ import VideoWithSkeleton from './VideoExample';
 import VideoInfoCard from './VideoInfoCard';
 
 
+<<<<<<< HEAD
 type Feature = {
   id: string;
   name: string;
@@ -46,6 +47,8 @@ type Feature = {
   mlModels: MLModel[];
 };
 
+=======
+>>>>>>> cfc29cfa9afaa26fed5700354ce901e6015640f4
 interface SettingValue {
   id: string;
   name: string;
@@ -125,7 +128,7 @@ export const EnhanceVideo: React.FunctionComponent<{
   id: string;
 }> = ({ id }) => {
   const [data, setData] = useState<UploadedVideo | null>(null);
-  const [mlFeatures, setMlFeatures] = useState<Feature[]>([]);
+  const [mlFeatures, setMlFeatures] = useState<Enhancer[]>([]);
   const [mlSettings, setMlSettings] = useState<Setting[]>([]);
   const [credit, setCredit] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -382,6 +385,7 @@ export const EnhanceVideo: React.FunctionComponent<{
                           key={feature.id}
                           className="border-t pt-4 first:border-none first:pt-0 dark:border-gray-700"
                         >
+<<<<<<< HEAD
                           <div className="flex flex-wrap items-start sm:flex-nowrap gap-4 sm:gap-12 justify-center">
                             <h3 className="flex w-full max-w-[220px] text-nowrap items-center justify-center sm:justify-between gap-4">
                               <div className="hover:cursor-pointer">
@@ -470,6 +474,46 @@ export const EnhanceVideo: React.FunctionComponent<{
                                   })}
                                 </div>
                               </div>
+=======
+                          <div className="flex flex-wrap items-start gap-2 py-1">
+                            <div className="flex items-center gap-2 w-[170px] text-lg font-medium dark:text-gray-100">
+                              <Icon
+                                name={feature.icon}
+                                size={40}
+                                className="w-6 h-6 text-gray-600 dark:text-gray-300 me-2"
+                              />
+                              {feature.name} {feature.isDisable ? '(Please Contact)' : ''}
+                            </div>
+                            <div className="flex flex-wrap gap-2 flex-1">
+                              {feature.mlModels.map((model) => {
+                                const isSelected =
+                                  selectedModels[feature.id] === model;
+
+                                return (
+                                  <button
+                                    key={model.id}
+                                    onClick={() =>
+                                      !feature.isDisable && handleSelectModel(feature.id.toString(), model)
+                                    }
+                                    className={`px-3 py-1 rounded-full text-md border transition-colors
+                                    ${
+                                      isSelected
+                                        ? 'bg-blue-600 text-white border-blue-600'
+                                        : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700'
+                                    }
+                                    ${feature.isDisable ? 'opacity-50 cursor-not-allowed' : ''}
+                                  `}
+                                  >
+                                    <div className="flex flex-row">
+                                      {isSelected && !feature.isDisable &&  (
+                                        <CheckIcon className="w-4 h-4 me-2 mt-0.5" />
+                                      )}
+                                      {model.name}
+                                    </div>
+                                  </button>
+                                );
+                              })}
+>>>>>>> cfc29cfa9afaa26fed5700354ce901e6015640f4
                             </div>
                           </div>
                         </div>
