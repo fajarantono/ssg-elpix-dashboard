@@ -22,7 +22,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion/Accordion';
-import { duration, getVideoQuality } from '@/lib/utils';
+import { cn, duration, getVideoQuality } from '@/lib/utils';
 import { UploadedVideo } from '@/app/(dashboard)/worksheet-video/_interfaces/WorksheetVideo';
 import Image from 'next/image';
 import AvatarText from '@/components/ui/avatar/AvatarText';
@@ -31,11 +31,18 @@ import { Slider } from '@/components/ui/slider/Slider';
 import { toast } from 'react-toastify';
 import ErrorPage from '@/components/pages/ErrorPage';
 import LoadingForm from './LoadingForm';
+import { Tooltip, TooltipArrow, TooltipContent, TooltipPortal, TooltipProvider, TooltipTrigger } from '@radix-ui/react-tooltip';
+import VideoWithSkeleton from './VideoExample';
+import VideoInfoCard from './VideoInfoCard';
+
 
 type Feature = {
   id: string;
   name: string;
   icon: string;
+  description: string;
+  videoUrl?: string;
+  isDisabled?: boolean;
   mlModels: MLModel[];
 };
 
@@ -296,82 +303,28 @@ export const EnhanceVideo: React.FunctionComponent<{
 
   return (
     <>
+      <Button
+        onClick={router.back}
+        startIcon={<LucideArrowLeftFromLine size={15} />}
+        size="xs"
+        variant="outline"
+        className={cn(
+          'text-md text-gray-500 p-2 dark:text-gray-300 rounded-xl border-1',
+        )}
+      >
+        <span>Uploaded Video</span>
+      </Button>
       {ability.can('read', 'Worksheet') && (
         <div className="flex flex-row space-x-5">
-          <div className="flex flex-col flex-1 space-y-5">
-            <ComponentCard className="w-full">
-              <Button
-                onClick={router.back}
-                startIcon={<LucideArrowLeftFromLine size={30} />}
-                size="xs"
-                variant="none"
-              >
-                <h3 className="text-lg font-semibold hover:text-gray-800 hover:dark:text-white/90">
-                  Uploaded Video
+          <div className="flex flex-col flex-1 ">
+            <div className="sticky top-22 z-20 space-y-5">
+              <ComponentCard className="w-full">
+                <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90 flex flex-row">
+                  Video
                 </h3>
-              </Button>
-
-              {isLoading ? (
-                <LoadingForm />
-              ) : (
-                <div className="max-w-2xl mx-auto p-4 bg-gray-100 rounded-xl flex gap-4  dark:bg-gray-800">
-                  <div className="flex-shrink-0 w-64 h-40 bg-gray-200 rounded-lg overflow-hidden">
-                    {data?.thumbnail ? (
-                      <Image
-                        width={480}
-                        height={200}
-                        src={data?.thumbnail}
-                        alt="Video thumbnail"
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <AvatarText name={data?.name ?? ''} />
-                    )}
-                  </div>
-
-                  <div className="flex-grow">
-                    <div className="text-lg font-semibold text-gray-800 truncate mb-1 overflow-ellipsis dark:text-white">
-                      {data?.name}
-                    </div>
-
-                    <div className="text-blue-500 font-medium text-sm mb-3 dark:text-gray-300">
-                      Upload Complete
-                    </div>
-
-                    <div className="space-y-">
-                      <div className="flex items-center">
-                        <ClockIcon className="w-4 h-4 mr-2 text-gray-600 dark:text-gray-400" />
-                        <span className="text-gray-600 dark:text-gray-400">
-                          {duration(
-                            (data?.nFrames ?? 0) / (data?.framerate ?? 0),
-                          )}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center">
-                        <FilmIcon className="w-4 h-4 mr-2 text-gray-600 dark:text-gray-400" />
-                        <span className="text-gray-600 dark:text-gray-400">
-                          {data?.framerate} FPS
-                        </span>
-                      </div>
-
-                      <div className="flex items-center">
-                        <ScanIcon className="w-4 h-4 mr-2 text-gray-600 dark:text-gray-400" />
-                        <span className="text-gray-600 dark:text-gray-400">
-                          {data?.width}x{data?.height}&nbsp;
-                          {getVideoQuality({
-                            width: data?.width ?? 1,
-                            height: data?.height ?? 1,
-                            bitrate: data?.bitrate,
-                          })}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </ComponentCard>
-            <ComponentCard>
+                {isLoading ? <LoadingForm /> : <VideoInfoCard data={data} />}
+              </ComponentCard>
+              <ComponentCard>
               <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90 flex flex-row">
                 <ScissorsIcon className="me-2" />
                 Enhance specific segment
@@ -408,10 +361,14 @@ export const EnhanceVideo: React.FunctionComponent<{
                 </h3>
               </Button>
             </ComponentCard>
+            </div>
+            
+            
             {error && <ErrorPage />}
           </div>
 
-          <div className="w-full flex-1">
+          <div className="w-full flex-1 space-y-5">
+            {/* ML Models */}
             <ComponentCard>
               <Accordion type="multiple" defaultValue={['item-1']}>
                 <AccordionItem value="item-1">
@@ -425,43 +382,94 @@ export const EnhanceVideo: React.FunctionComponent<{
                           key={feature.id}
                           className="border-t pt-4 first:border-none first:pt-0 dark:border-gray-700"
                         >
-                          <div className="flex flex-wrap items-start gap-2 py-1">
-                            <div className="flex items-center gap-2 w-[170px] text-lg font-medium dark:text-gray-100">
-                              <Icon
-                                name={feature.icon}
-                                size={40}
-                                className="w-6 h-6 text-gray-600 dark:text-gray-300 me-2"
-                              />
-                              {feature.name}
-                            </div>
-                            <div className="flex flex-wrap gap-2 flex-1">
-                              {feature.mlModels.map((model) => {
-                                const isSelected =
-                                  selectedModels[feature.id] === model;
+                          <div className="flex flex-wrap items-start sm:flex-nowrap gap-4 sm:gap-12 justify-center">
+                            <h3 className="flex w-full max-w-[220px] text-nowrap items-center justify-center sm:justify-between gap-4">
+                              <div className="hover:cursor-pointer">
+                                <TooltipProvider delayDuration={100}>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <div className="flex items-start gap-2 text-base font-medium text-black dark:text-gray-100">
+                                        <Icon
+                                          name={feature.icon}
+                                          size={40}
+                                          className="w-6 h-6 text-gray-600 dark:text-gray-300 me-2"
+                                        />
+                                        <div className="flex items-center gap-1">
+                                          <span>{feature.name}</span>
+                                          <Icon
+                                            name="CircleHelp"
+                                            size={14}
+                                            className="opacity-60"
+                                          />
+                                        </div>
+                                      </div>
+                                    </TooltipTrigger>
+                                    <TooltipPortal>
+                                      <TooltipContent
+                                        side="top"
+                                        sideOffset={8}
+                                        className="relative z-50 w-[500px] rounded-lg border bg-white p-4 shadow-xl dark:bg-gray-800 dark:border-gray-700"
+                                      >
+                                        <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                                          {feature.name}
+                                        </h4>
+                                        <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
+                                          {feature.description}
+                                        </p>
+                                        <div>
+                                          <VideoWithSkeleton
+                                            videoUrl={feature.videoUrl}
+                                          />
+                                        </div>
+                                        <TooltipArrow className="fill-white dark:fill-gray-800" />
+                                      </TooltipContent>
+                                    </TooltipPortal>
+                                  </Tooltip>
+                                </TooltipProvider>
+                              </div>
+                            </h3>
 
-                                return (
-                                  <button
-                                    key={model.id}
-                                    onClick={() =>
-                                      handleSelectModel(feature.id, model)
-                                    }
-                                    className={`px-3 py-1 rounded-full text-md border transition-colors
-                                    ${
-                                      isSelected
-                                        ? 'bg-blue-600 text-white border-blue-600'
-                                        : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700'
-                                    }
-                                  `}
-                                  >
-                                    <div className="flex flex-row">
-                                      {isSelected && (
-                                        <CheckIcon className="w-4 h-4 me-2 mt-0.5" />
-                                      )}
-                                      {model.name}
-                                    </div>
-                                  </button>
-                                );
-                              })}
+                            <div className="w-full">
+                              <div className="items-center text-xs md:text-sm">
+                                <div className="flex gap-1 sm:gap-2 flex-wrap justify-center sm:justify-start">
+                                  {feature.mlModels.map((model) => {
+                                    const isSelected =
+                                      selectedModels[feature.id] === model;
+                                    return (
+                                      <button
+                                        key={model.id}
+                                        onClick={() =>
+                                          !feature.isDisable &&
+                                          handleSelectModel(
+                                            feature.id.toString(),
+                                            model,
+                                          )
+                                        }
+                                        disabled={model.isDisabled}
+                                        className={`px-6 py-2 border border-primary rounded-xl text-md border-blue-400 transition-colors text-center text-sm
+                                        ${
+                                          isSelected
+                                            ? 'bg-blue-600 text-white border-blue-600'
+                                            : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700'
+                                        }
+                                        ${
+                                          model.isDisabled
+                                            ? 'opacity-50 cursor-not-allowed'
+                                            : ''
+                                        }
+                                      `}
+                                      >
+                                        <div className="flex flex-row">
+                                          {/* {isSelected && (
+                                            <CheckIcon className="w-4 h-4 me-2 mt-0.5" />
+                                          )} */}
+                                          {model.name}
+                                        </div>
+                                      </button>
+                                    );
+                                  })}
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -469,7 +477,12 @@ export const EnhanceVideo: React.FunctionComponent<{
                     </div>
                   </AccordionContent>
                 </AccordionItem>
-                <AccordionItem value="item-2">
+              </Accordion>
+            </ComponentCard>
+            {/* Setting */}
+            <ComponentCard>
+              <Accordion type="multiple">
+                <AccordionItem value="setting">
                   <AccordionTrigger className="text-lg font-outfit font-semibold dark:text-white">
                     Setting
                   </AccordionTrigger>
@@ -481,7 +494,7 @@ export const EnhanceVideo: React.FunctionComponent<{
                           className="border-t pt-4 first:border-none first:pt-0 dark:border-gray-700"
                         >
                           <div className="flex flex-wrap items-start gap-2 py-1">
-                            <div className="flex items-center gap-2 w-[170px] text-lg font-medium dark:text-gray-100">
+                            <div className="flex items-center gap-2 w-[270px] text-lg font-medium dark:text-gray-100">
                               <Icon
                                 name={setting.icon}
                                 size={40}

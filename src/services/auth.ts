@@ -30,7 +30,7 @@ export const login = async (username: string, password: string) => {
     const { token, refreshToken, expiredToken } = response.data;
 
     setToken(token, expiredToken);
-    setRefreshToken(refreshToken);
+    setRefreshToken(refreshToken, expiredToken);
     setUser(response.data, expiredToken);
 
     return response;
