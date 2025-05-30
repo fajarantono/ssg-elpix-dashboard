@@ -24,7 +24,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion/Accordion';
 import Switch from '@/components/form/switch/Switch';
-import { cn, duration, getVideoQuality } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import { UploadedVideo } from '@/app/(dashboard)/worksheet-video/_interfaces/WorksheetVideo';
 import Image from 'next/image';
 import Icon from '@/components/ui/icon';
@@ -537,8 +537,8 @@ export const EnhanceVideo: React.FunctionComponent<{
                     <span className="me-2">Preview</span>
                     <div>
                       <Switch
-                        checked={previewEnabled}
-                        onCheckedChange={(checked) => setPreviewEnabled(checked)}
+                        defaultChecked={previewEnabled}
+                        onChange={(checked) => setPreviewEnabled(checked)}
                       />
                     </div>
                   </div>
