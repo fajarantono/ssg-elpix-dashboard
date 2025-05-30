@@ -290,7 +290,14 @@ export const EnhanceVideo: React.FunctionComponent<{
     } finally {
       setIsLoadingIcon(false);
     }
-  }, [data, rangeValue, router, selectedModels, selectedSettings]);
+  }, [
+    data,
+    previewEnabled,
+    rangeValue,
+    router,
+    selectedModels,
+    selectedSettings,
+  ]);
 
   useEffect(() => {
     getDataVideo();
@@ -400,42 +407,48 @@ export const EnhanceVideo: React.FunctionComponent<{
                               </h3>
 
                               <div className="w-full">
-  <div className="items-center text-xs md:text-sm">
-    <div className="flex gap-1 sm:gap-2 flex-wrap justify-center sm:justify-start">
-      {feature.mlModels.map((model) => {
-        const isSelected = selectedModels[feature.id] === model;
-        return (
-          <button
-            key={model.id}
-            onClick={() =>
-              !feature.isDisable &&
-              handleSelectModel(feature.id.toString(), model)
-            }
-            disabled={feature.isDisable}
-            className={`px-6 py-2 border border-primary rounded-xl text-md border-blue-400 transition-colors text-center text-sm
-              ${
-                isSelected
-                  ? 'bg-blue-600 text-white border-blue-600'
-                  : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700'
-              }
-              ${feature.isDisable ? 'opacity-50 cursor-not-allowed' : ''}
-            `}
-          >
-            <div className="flex flex-row">{model.name}</div>
-          </button>
-        );
-      })}
-    </div>
+                                <div className="items-center text-xs md:text-sm">
+                                  <div className="flex gap-1 sm:gap-2 flex-wrap justify-center sm:justify-start">
+                                    {feature.mlModels.map((model) => {
+                                      const isSelected =
+                                        selectedModels[feature.id] === model;
+                                      return (
+                                        <button
+                                          key={model.id}
+                                          onClick={() =>
+                                            !feature.isDisable &&
+                                            handleSelectModel(
+                                              feature.id.toString(),
+                                              model,
+                                            )
+                                          }
+                                          disabled={feature.isDisable}
+                                          className={`px-6 py-2 border border-primary rounded-xl text-md border-blue-400 transition-colors text-center text-sm
+                                            ${
+                                              isSelected
+                                                ? 'bg-blue-600 text-white border-blue-600'
+                                                : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700'
+                                            }
+                                            ${feature.isDisable ? 'opacity-50 cursor-not-allowed' : ''}
+                                          `}
+                                        >
+                                          <div className="flex flex-row">
+                                            {model.name}
+                                          </div>
+                                        </button>
+                                      );
+                                    })}
+                                  </div>
 
-    {/* Show warning once per feature */}
-    {feature.isDisable && (
-      <span className="block mt-2 text-xs text-red-500">
-        Please contact administrator to select this filter
-      </span>
-    )}
-  </div>
-</div>
-
+                                  {/* Show warning once per feature */}
+                                  {feature.isDisable && (
+                                    <span className="block mt-2 text-xs text-red-500">
+                                      Please contact administrator to select
+                                      this filter
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
                             </div>
                           </div>
                         ))}
@@ -450,7 +463,7 @@ export const EnhanceVideo: React.FunctionComponent<{
                   <AccordionItem value="setting">
                     <AccordionTrigger className="text-lg font-outfit font-semibold dark:text-white pt-0">
                       <div className="flex items-center gap-2">
-                        <Settings/>
+                        <Settings />
                         <span>Setting</span>
                       </div>
                     </AccordionTrigger>
@@ -528,7 +541,7 @@ export const EnhanceVideo: React.FunctionComponent<{
                   'border border-gray-300 dark:border-gray-600',
                   'text-xs lg:text-sm gap-2.5 md:gap-4 py-2 md:py-2 px-6',
                   'text-gray-800 dark:text-white',
-                  'rounded-2xl flex justify-center lg:justify-between items-center flex-wrap'
+                  'rounded-2xl flex justify-center lg:justify-between items-center flex-wrap',
                 )}
               >
                 <div className="flex-grow flex justify-between flex-wrap items-center text-sm gap-x-5 gap-y-1.5">
