@@ -50,11 +50,11 @@ export function getVideoQuality({ width, height, bitrate }: VideoMeta): string {
   // Deteksi berdasarkan resolusi
   let qualityLabel = 'Low Quality';
 
-  if (res >= 3840) qualityLabel = '4K Ultra HD';
-  if (res >= 2560) qualityLabel = '2K Quad HD';
-  if (res >= 1920) qualityLabel = 'Full HD';
-  if (res >= 1280) qualityLabel = 'HD';
   if (res >= 640) qualityLabel = 'SD';
+  if (res >= 1280) qualityLabel = 'HD';
+  if (res >= 1920) qualityLabel = 'Full HD';
+  if (res >= 2560) qualityLabel = '2K Quad HD';
+  if (res >= 3840) qualityLabel = '4K Ultra HD';
 
   // Bitrate check — downgrade jika bitrate terlalu kecil
   if (bitrate !== undefined && bitrate !== null) {
